@@ -525,18 +525,18 @@ export const ResultView: React.FC<ResultViewProps> = ({
       </div>
 
       {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion - z-30 sits strictly above header */}
-      <main className="relative z-30 grow flex flex-col justify-start lg:justify-center items-center min-h-0 w-full overflow-visible py-1 sm:py-2 lg:my-auto px-2 sm:px-4">
+      <main className="relative z-30 grow flex flex-col justify-between items-center min-h-0 w-full overflow-visible py-1 sm:py-2 lg:my-auto px-2 sm:px-4">
         <div
-          className={`w-full flex flex-col lg:flex-row items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-full grow flex flex-col lg:flex-row items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
               ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12'
               : 'max-w-[440px] sm:max-w-[460px] md:max-w-[480px] gap-0'
           }`}
         >
           {/* Left Column: Hero Card & Actions Deck - ALWAYS full size, moves to the left when Deep Dive is open */}
-          <div className="w-full max-w-[440px] sm:max-w-[460px] md:max-w-[480px] shrink-0 flex flex-col items-center justify-center gap-1.5 xs:gap-2 sm:gap-3 relative z-30">
+          <div className="w-full max-w-[440px] sm:max-w-[460px] md:max-w-[480px] shrink-0 grow flex flex-col items-center justify-between min-h-0 gap-2 xs:gap-2.5 sm:gap-3 relative z-30">
             {/* Collectible Playing Card (Hero) - z-40 ensures card is ALWAYS above buttons & header */}
-            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-0.5 sm:pb-2">
+            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full grow flex justify-center items-center my-auto min-h-0 pb-1 sm:pb-2">
               {/* Oracle Proclamation Intro Overlay: 2-Phase Cinematic Reveal */}
               {forgePhase === 'oracle_intro' && (
                 <div
@@ -611,36 +611,36 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 onFlipChange={handleCardFlip}
                 isPopping={forgePhase === 'cutout_impact' || forgePhase === 'fill_front'}
                 forgePhase={forgePhase}
-                className="max-w-[min(285px,36vh)] xs:max-w-[min(310px,38vh)] sm:max-w-[380px] md:max-w-[440px]"
+                className="w-full max-w-[310px] xs:max-w-[335px] sm:max-w-[380px] md:max-w-[440px]"
               />
             </div>
 
             {/* Action CTAs & Drawer Trigger (Staggered High-Tech Entry) - z-10 layered behind card */}
             <div
-              className={`flex flex-col gap-1.5 xs:gap-2 sm:gap-2.5 w-full shrink-0 relative z-10 transition-opacity duration-300 ${
+              className={`flex flex-col gap-2 xs:gap-2.5 w-full shrink-0 relative z-10 transition-opacity duration-300 ${
                 isForging ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
             >
               {/* Row 1: Primary Action Buttons: Share my result & Save image */}
-              <div className={`grid grid-cols-2 gap-1.5 xs:gap-2 sm:gap-2.5 relative ${
+              <div className={`grid grid-cols-2 gap-2 xs:gap-2.5 relative ${
                 !isForging ? 'animate-deck-module-1' : 'opacity-0'
               }`}>
                 <GlassButton
                   type="button"
                   onClick={handleShareResult}
                   disabled={isExporting}
-                  className="relative overflow-hidden py-2 xs:py-2.5 sm:py-3.5 px-2.5 xs:px-3 sm:px-4 bg-white text-[#05060A] font-extrabold text-[11px] xs:text-xs sm:text-[13px] uppercase tracking-wider rounded-xl xs:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
+                  className="relative overflow-hidden py-2.5 sm:py-3.5 px-3 sm:px-4 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-xl xs:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
                 >
-                  <Share2 size={14} strokeWidth={2.5} className="xs:w-[15px] xs:h-[15px]" />
+                  <Share2 size={15} strokeWidth={2.5} />
                   <span className="truncate">Share result</span>
                 </GlassButton>
                 <GlassButton
                   type="button"
                   onClick={handleSaveImage}
                   disabled={isExporting}
-                  className="py-2 xs:py-2.5 sm:py-3.5 px-2.5 xs:px-3 sm:px-4 liquid-glass-button text-white font-extrabold text-[11px] xs:text-xs sm:text-[13px] uppercase tracking-wider rounded-xl xs:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                  className="py-2.5 sm:py-3.5 px-3 sm:px-4 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-xl xs:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
                 >
-                  <Download size={14} strokeWidth={2.5} className="xs:w-[15px] xs:h-[15px]" />
+                  <Download size={15} strokeWidth={2.5} />
                   <span className="truncate">Save image</span>
                 </GlassButton>
               </div>
@@ -650,7 +650,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 <GlassButton
                   type="button"
                   onClick={handleInviteFriend}
-                  className="w-full py-2 xs:py-2.5 sm:py-3 px-3 sm:px-4 liquid-glass-button text-[10.5px] xs:text-[11px] sm:text-[12.5px] font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
+                  className="w-full py-2.5 sm:py-3 px-3 sm:px-4 liquid-glass-button text-[11px] sm:text-[12.5px] font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
                 >
                   {copiedQuizLink ? (
                     <>
@@ -667,7 +667,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
               </div>
 
               {exportMessage && (
-                <div className="text-[11px] xs:text-xs font-mono text-white text-center py-1 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
+                <div className="text-xs font-mono text-white text-center py-1 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
                   <Sparkles size={12} className="text-[#F59E0B] animate-spin" />
                   <span>{exportMessage}</span>
                 </div>
@@ -678,25 +678,25 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 <GlassButton
                   type="button"
                   onClick={() => setIsSidePanelOpen(prev => !prev)}
-                  className="w-full py-2 xs:py-2.5 sm:py-3.5 px-3 xs:px-3.5 sm:px-5 rounded-xl xs:rounded-2xl text-white font-mono text-[11px] xs:text-xs sm:text-[13px] uppercase tracking-wider flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.05] border border-white/15 hover:border-white/30"
+                  className="w-full py-2.5 sm:py-3.5 px-3.5 sm:px-5 rounded-xl xs:rounded-2xl text-white font-sans text-xs sm:text-[13px] font-semibold flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/30 transition-all"
                 >
-                  <div className="flex items-center gap-1.5 xs:gap-2 truncate mr-2">
-                    <Sparkles size={14} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0 xs:w-[15px] xs:h-[15px]" />
-                    <span className="font-bold text-[11px] xs:text-[11.5px] sm:text-[13px] truncate">
-                      {isSidePanelOpen ? 'Close Deep Dive' : 'Want to deep dive? See more'}
+                  <div className="flex items-center gap-2 truncate mr-2">
+                    <Sparkles size={15} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0" />
+                    <span className="truncate">
+                      {isSidePanelOpen ? 'Close Detailed Breakdown' : 'Detailed Spectrum Breakdown'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] xs:text-xs text-[#94A3B8] shrink-0">
-                    <span className="font-semibold text-white">{isSidePanelOpen ? 'Close' : 'Open'}</span>
+                  <div className="flex items-center gap-1.5 text-xs text-[#94A3B8] shrink-0 font-mono">
+                    <span className="font-semibold text-white">{isSidePanelOpen ? 'Close' : 'View'}</span>
                     {isSidePanelOpen ? (
                       <>
-                        <ChevronDown size={13} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
-                        <ChevronLeft size={13} className="hidden lg:inline group-hover:-translate-x-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
+                        <ChevronDown size={14} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white" />
+                        <ChevronLeft size={14} className="hidden lg:inline group-hover:-translate-x-0.5 transition-transform text-white" />
                       </>
                     ) : (
                       <>
-                        <ChevronUp size={13} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
-                        <ChevronRight size={13} className="hidden lg:inline group-hover:translate-x-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
+                        <ChevronUp size={14} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white" />
+                        <ChevronRight size={14} className="hidden lg:inline group-hover:translate-x-0.5 transition-transform text-white" />
                       </>
                     )}
                   </div>
