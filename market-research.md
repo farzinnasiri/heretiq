@@ -1,4 +1,4 @@
-# Market research: a share-first political compass
+# HERETIQ market research: a share-first political archetype quiz
 
 _Research date: 15 September 2026_
 _Phase: desk research and live product audit; hypotheses still need user validation_
