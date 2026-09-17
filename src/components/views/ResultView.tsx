@@ -419,7 +419,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
   const isForging = forgePhase !== 'settled';
 
   return (
-    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-start lg:justify-between p-2 sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden pb-[max(1.75rem,env(safe-area-inset-bottom,24px))] lg:pb-2.5">
+    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-start lg:justify-between px-2 pt-[max(0.6rem,env(safe-area-inset-top,12px))] pb-[max(1.5rem,env(safe-area-inset-bottom,20px))] sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
       {/* Skip Forge Animation Button */}
       {isForging && (
         <GlassButton
@@ -451,73 +451,73 @@ export const ResultView: React.FC<ResultViewProps> = ({
       )}
 
       {/* Result controls */}
-      <div className="relative flex justify-center items-center w-full shrink-0 px-2 py-2 z-40">
-        <div className="grid grid-cols-[1fr_1fr_1.4fr_1fr_1fr] items-start gap-3 sm:gap-5 w-full max-w-[430px] py-2">
+      <div className="relative flex justify-center items-center w-full shrink-0 px-1 xs:px-2 py-0.5 xs:py-1 sm:py-2 z-40">
+        <div className="grid grid-cols-[1fr_1fr_1.4fr_1fr_1fr] items-start gap-2 xs:gap-3 sm:gap-5 w-full max-w-[430px] py-1 xs:py-1.5 sm:py-2">
           {/* 1. Animate Button */}
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-0.5 xs:gap-1">
             <GlassButton
               onClick={handleReplayForge}
               disabled={isForging}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button liquid-glass-amber flex items-center justify-center transition-all cursor-pointer disabled:opacity-40 group"
+              className="w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button liquid-glass-amber flex items-center justify-center transition-all cursor-pointer disabled:opacity-40 group"
               title="Re-forge card (replay reveal animation)"
               aria-label="Re-forge card"
             >
-              <RotateCw size={17} className="text-[#F59E0B] group-hover:rotate-45 transition-transform" />
+              <RotateCw size={15} className="text-[#F59E0B] group-hover:rotate-45 transition-transform xs:w-[17px] xs:h-[17px]" />
             </GlassButton>
-            <span className="text-[11px] sm:text-xs font-sans font-semibold text-[#F59E0B] tracking-tight">
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-sans font-semibold text-[#F59E0B] tracking-tight">
               Animate
             </span>
           </div>
 
           {/* 2. Reset Button (Opens Confirmation Modal) */}
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-0.5 xs:gap-1">
             <GlassButton
               onClick={() => setIsResetConfirmOpen(true)}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button liquid-glass-crimson flex items-center justify-center transition-all cursor-pointer group"
+              className="w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button liquid-glass-crimson flex items-center justify-center transition-all cursor-pointer group"
               title="Reset progress (start fresh)"
               aria-label="Reset progress"
             >
-              <RotateCcw size={16} className="text-[#FF2A54] group-hover:-rotate-45 transition-transform" />
+              <RotateCcw size={15} className="text-[#FF2A54] group-hover:-rotate-45 transition-transform xs:w-[16px] xs:h-[16px]" />
             </GlassButton>
-            <span className="text-[11px] sm:text-xs font-sans font-semibold text-[#FF2A54] tracking-tight">
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-sans font-semibold text-[#FF2A54] tracking-tight">
               Reset
             </span>
           </div>
 
-          <div className="h-10 sm:h-11 flex flex-col items-center justify-center gap-2" aria-label="HERETIQ">
-            <span className="font-heading text-sm sm:text-base font-black tracking-widest text-white uppercase">HERETIQ</span>
+          <div className="h-9 xs:h-10 sm:h-11 flex flex-col items-center justify-center gap-1.5 xs:gap-2" aria-label="HERETIQ">
+            <span className="font-heading text-xs xs:text-sm sm:base font-black tracking-widest text-white uppercase">HERETIQ</span>
             <div className="flex items-center gap-1.5" aria-hidden="true">
-              <span className="w-2 h-2 rounded-full bg-[#FF2A54] shadow-[0_0_10px_#FF2A54]" />
-              <span className="w-2 h-2 rounded-full bg-[#0066FF] shadow-[0_0_10px_#0066FF]" />
+              <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-[#FF2A54] shadow-[0_0_10px_#FF2A54]" />
+              <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-[#0066FF] shadow-[0_0_10px_#0066FF]" />
             </div>
           </div>
 
           {/* 4. Help Button */}
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-0.5 xs:gap-1">
             <GlassButton
               onClick={onOpenHowItWorks}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+              className="w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"
               title="Methodology & How it works"
               aria-label="Methodology"
             >
-              <HelpCircle size={17} />
+              <HelpCircle size={15} className="xs:w-[17px] xs:h-[17px]" />
             </GlassButton>
-            <span className="text-[11px] sm:text-xs font-sans font-semibold text-slate-300 tracking-tight">
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-sans font-semibold text-slate-300 tracking-tight">
               Help
             </span>
           </div>
 
           {/* 5. Privacy Button */}
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-0.5 xs:gap-1">
             <GlassButton
               onClick={onOpenPrivacy}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button liquid-glass-emerald flex items-center justify-center transition-all cursor-pointer"
+              className="w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full liquid-glass-button liquid-glass-emerald flex items-center justify-center transition-all cursor-pointer"
               title="Privacy (100% on device)"
               aria-label="Privacy"
             >
-              <ShieldCheck size={17} className="text-[#10B981]" />
+              <ShieldCheck size={15} className="text-[#10B981] xs:w-[17px] xs:h-[17px]" />
             </GlassButton>
-            <span className="text-[11px] sm:text-xs font-sans font-semibold text-[#10B981] tracking-tight">
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-sans font-semibold text-[#10B981] tracking-tight">
               Privacy
             </span>
           </div>
@@ -534,9 +534,9 @@ export const ResultView: React.FC<ResultViewProps> = ({
           }`}
         >
           {/* Left Column: Hero Card & Actions Deck - ALWAYS full size, moves to the left when Deep Dive is open */}
-          <div className="w-full max-w-[440px] sm:max-w-[460px] md:max-w-[480px] shrink-0 flex flex-col items-center justify-center gap-2 sm:gap-3 relative z-30">
+          <div className="w-full max-w-[440px] sm:max-w-[460px] md:max-w-[480px] shrink-0 flex flex-col items-center justify-center gap-1.5 xs:gap-2 sm:gap-3 relative z-30">
             {/* Collectible Playing Card (Hero) - z-40 ensures card is ALWAYS above buttons & header */}
-            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
+            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-0.5 sm:pb-2">
               {/* Oracle Proclamation Intro Overlay: 2-Phase Cinematic Reveal */}
               {forgePhase === 'oracle_intro' && (
                 <div
@@ -611,36 +611,36 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 onFlipChange={handleCardFlip}
                 isPopping={forgePhase === 'cutout_impact' || forgePhase === 'fill_front'}
                 forgePhase={forgePhase}
-                className="max-w-[285px] xs:max-w-[310px] sm:max-w-[380px] md:max-w-[440px]"
+                className="max-w-[min(285px,36vh)] xs:max-w-[min(310px,38vh)] sm:max-w-[380px] md:max-w-[440px]"
               />
             </div>
 
             {/* Action CTAs & Drawer Trigger (Staggered High-Tech Entry) - z-10 layered behind card */}
             <div
-              className={`flex flex-col gap-2 sm:gap-2.5 w-full shrink-0 relative z-10 transition-opacity duration-300 ${
+              className={`flex flex-col gap-1.5 xs:gap-2 sm:gap-2.5 w-full shrink-0 relative z-10 transition-opacity duration-300 ${
                 isForging ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
             >
               {/* Row 1: Primary Action Buttons: Share my result & Save image */}
-              <div className={`grid grid-cols-2 gap-2 sm:gap-2.5 relative ${
+              <div className={`grid grid-cols-2 gap-1.5 xs:gap-2 sm:gap-2.5 relative ${
                 !isForging ? 'animate-deck-module-1' : 'opacity-0'
               }`}>
                 <GlassButton
                   type="button"
                   onClick={handleShareResult}
                   disabled={isExporting}
-                  className="relative overflow-hidden py-2.5 sm:py-3.5 px-3 sm:px-4 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
+                  className="relative overflow-hidden py-2 xs:py-2.5 sm:py-3.5 px-2.5 xs:px-3 sm:px-4 bg-white text-[#05060A] font-extrabold text-[11px] xs:text-xs sm:text-[13px] uppercase tracking-wider rounded-xl xs:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
                 >
-                  <Share2 size={15} strokeWidth={2.5} />
+                  <Share2 size={14} strokeWidth={2.5} className="xs:w-[15px] xs:h-[15px]" />
                   <span className="truncate">Share result</span>
                 </GlassButton>
                 <GlassButton
                   type="button"
                   onClick={handleSaveImage}
                   disabled={isExporting}
-                  className="py-2.5 sm:py-3.5 px-3 sm:px-4 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                  className="py-2 xs:py-2.5 sm:py-3.5 px-2.5 xs:px-3 sm:px-4 liquid-glass-button text-white font-extrabold text-[11px] xs:text-xs sm:text-[13px] uppercase tracking-wider rounded-xl xs:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
                 >
-                  <Download size={15} strokeWidth={2.5} />
+                  <Download size={14} strokeWidth={2.5} className="xs:w-[15px] xs:h-[15px]" />
                   <span className="truncate">Save image</span>
                 </GlassButton>
               </div>
@@ -650,7 +650,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 <GlassButton
                   type="button"
                   onClick={handleInviteFriend}
-                  className="w-full py-2.5 sm:py-3 px-3 sm:px-4 liquid-glass-button text-[11px] sm:text-[12.5px] font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
+                  className="w-full py-2 xs:py-2.5 sm:py-3 px-3 sm:px-4 liquid-glass-button text-[10.5px] xs:text-[11px] sm:text-[12.5px] font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
                 >
                   {copiedQuizLink ? (
                     <>
@@ -667,7 +667,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
               </div>
 
               {exportMessage && (
-                <div className="text-xs font-mono text-white text-center py-1 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
+                <div className="text-[11px] xs:text-xs font-mono text-white text-center py-1 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
                   <Sparkles size={12} className="text-[#F59E0B] animate-spin" />
                   <span>{exportMessage}</span>
                 </div>
@@ -678,25 +678,25 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 <GlassButton
                   type="button"
                   onClick={() => setIsSidePanelOpen(prev => !prev)}
-                  className="w-full py-2.5 sm:py-3.5 px-3.5 sm:px-5 rounded-2xl text-white font-mono text-xs sm:text-[13px] uppercase tracking-wider flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.05] border border-white/15 hover:border-white/30"
+                  className="w-full py-2 xs:py-2.5 sm:py-3.5 px-3 xs:px-3.5 sm:px-5 rounded-xl xs:rounded-2xl text-white font-mono text-[11px] xs:text-xs sm:text-[13px] uppercase tracking-wider flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.05] border border-white/15 hover:border-white/30"
                 >
-                  <div className="flex items-center gap-2 truncate mr-2">
-                    <Sparkles size={15} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0" />
-                    <span className="font-bold text-[11.5px] sm:text-[13px] truncate">
+                  <div className="flex items-center gap-1.5 xs:gap-2 truncate mr-2">
+                    <Sparkles size={14} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0 xs:w-[15px] xs:h-[15px]" />
+                    <span className="font-bold text-[11px] xs:text-[11.5px] sm:text-[13px] truncate">
                       {isSidePanelOpen ? 'Close Deep Dive' : 'Want to deep dive? See more'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-[#94A3B8] shrink-0">
+                  <div className="flex items-center gap-1 text-[11px] xs:text-xs text-[#94A3B8] shrink-0">
                     <span className="font-semibold text-white">{isSidePanelOpen ? 'Close' : 'Open'}</span>
                     {isSidePanelOpen ? (
                       <>
-                        <ChevronDown size={14} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white" />
-                        <ChevronLeft size={14} className="hidden lg:inline group-hover:-translate-x-0.5 transition-transform text-white" />
+                        <ChevronDown size={13} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
+                        <ChevronLeft size={13} className="hidden lg:inline group-hover:-translate-x-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
                       </>
                     ) : (
                       <>
-                        <ChevronUp size={14} className="lg:hidden group-hover:-translate-y-0.5 transition-transform text-white" />
-                        <ChevronRight size={14} className="hidden lg:inline group-hover:translate-x-0.5 transition-transform text-white" />
+                        <ChevronUp size={13} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
+                        <ChevronRight size={13} className="hidden lg:inline group-hover:translate-x-0.5 transition-transform text-white xs:w-[14px] xs:h-[14px]" />
                       </>
                     )}
                   </div>

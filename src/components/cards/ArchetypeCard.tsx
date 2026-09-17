@@ -122,36 +122,45 @@ const AnimatedDimensionRow: React.FC<AnimatedDimensionRowProps> = ({
 
   return (
     <div
-      className="flex flex-col gap-1.5 sm:gap-2 transition-all duration-300"
+      className="flex flex-col gap-0.5 xs:gap-1 sm:gap-1.5 transition-all duration-300 w-full"
       style={{
         opacity: isRowVisible ? 1 : 0,
         transform: isRowVisible ? 'translateX(0)' : 'translateX(-12px)',
       }}
     >
-      <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-mono">
-        <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px]">
-          <span className="text-white font-bold uppercase tracking-wider">
-            {cfg.name}
-          </span>
-          <span className="text-[#64748B]">·</span>
-          <span className="text-[#FF2A54] font-semibold">{cfg.leftLabel}</span>
-          <span className="text-[#64748B]">/</span>
-          <span className="text-[#0066FF] font-semibold">{cfg.rightLabel}</span>
-        </div>
-        <span className={`px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-bold border transition-transform ${badgeColor} ${isLockedIn ? 'animate-badge-lockin' : ''}`}>
+      {/* Tier 1: Dimension Name on Left, Badge on Right */}
+      <div className="flex justify-between items-center text-[9px] xs:text-[10px] sm:text-[11px] font-mono leading-none">
+        <span className="text-white font-bold uppercase tracking-wider truncate mr-1.5">
+          {cfg.name}
+        </span>
+        <span
+          className={`px-1.5 xs:px-2 py-0.5 rounded text-[8px] xs:text-[8.5px] sm:text-[9.5px] font-bold border shrink-0 whitespace-nowrap transition-transform ${badgeColor} ${
+            isLockedIn ? 'animate-badge-lockin' : ''
+          }`}
+        >
           {badgeText}
         </span>
       </div>
 
-      {/* Precision Gradient Track with proper breathing room */}
-      <div className="relative h-2 sm:h-2.5 w-full rounded-full bg-gradient-to-r from-[#FF2A54]/30 via-white/10 to-[#0066FF]/30 border border-white/15">
+      {/* Tier 2: Precision Gradient Track with Glowing Indicator Dot */}
+      <div className="relative h-1.5 xs:h-2 sm:h-2.5 w-full rounded-full bg-gradient-to-r from-[#FF2A54]/30 via-white/10 to-[#0066FF]/30 border border-white/15 my-0.5">
         {/* 50% Midline Pip */}
         <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/35 -translate-x-1/2 z-0" />
         {/* Glowing Score Indicator Dot */}
         <div
-          className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full z-10 transition-all duration-150 ${dotColor}`}
-          style={{ left: `calc(${displayedScore}% - 7px)` }}
+          className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 xs:w-3.5 xs:h-3.5 rounded-full z-10 transition-all duration-150 ${dotColor}`}
+          style={{ left: `calc(${displayedScore}% - 6px)` }}
         />
+      </div>
+
+      {/* Tier 3: Left & Right Pole Labels Aligned to Track Endpoints */}
+      <div className="flex justify-between items-center text-[8px] xs:text-[8.5px] sm:text-[9.5px] font-mono leading-none">
+        <span className="text-[#FF2A54] font-semibold truncate text-left max-w-[48%]">
+          {cfg.leftLabel}
+        </span>
+        <span className="text-[#0066FF] font-semibold truncate text-right max-w-[48%]">
+          {cfg.rightLabel}
+        </span>
       </div>
     </div>
   );
@@ -367,7 +376,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
       {/* Radiant Shockwave Ring Layer on Impact (Option 1) */}
       {isImpactPunching && (
         <div
-          className="absolute pointer-events-none rounded-3xl border-2 z-10 animate-card-shockwave w-full max-w-[285px] xs:max-w-[310px] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4]"
+          className="absolute pointer-events-none rounded-3xl border-2 z-10 animate-card-shockwave w-full max-w-[min(285px,36vh)] xs:max-w-[min(310px,38vh)] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4]"
           style={{
             borderColor: themeColor,
             boxShadow: `0 0 50px 10px ${themeColor}70, inset 0 0 30px ${themeColor}40`,
@@ -377,7 +386,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
       {/* Elastic Spring Punch Wrapper - completely isolates spring bounce from 3D card tilt */}
       <div
-        className={`w-full max-w-[285px] xs:max-w-[310px] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4] flex justify-center items-center relative ${
+        className={`w-full max-w-[min(285px,36vh)] xs:max-w-[min(310px,38vh)] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4] flex justify-center items-center relative ${
           isImpactPunching ? 'animate-card-impact-punch' : ''
         }`}
         style={{ transformStyle: 'preserve-3d' }}
@@ -598,7 +607,9 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
               <div className="flex items-center gap-1.5 truncate mr-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A54] shrink-0" />
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] shrink-0" />
-                <span className="uppercase tracking-wider truncate">VERIFIED BY HERETIQ · {verifiedDate}</span>
+                <span className="uppercase tracking-wider truncate">
+                  VERIFIED BY HERETIQ<span className="hidden xs:inline"> · {verifiedDate}</span>
+                </span>
               </div>
               <div className="flex items-center gap-1 text-[#94A3B8] hover:text-white transition-colors shrink-0">
                 <span>TAP TO FLIP</span>
@@ -620,18 +631,18 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
             transform: 'rotateY(180deg)',
             transition: isFlipping ? 'opacity 0.2s ease 0.38s' : 'opacity 0.2s ease',
           }}
-          className={`absolute inset-0 w-full h-full rounded-3xl overflow-hidden p-3.5 sm:p-4 md:p-5 flex flex-col justify-between bg-[#06080F] ${
+          className={`absolute inset-0 w-full h-full rounded-3xl overflow-hidden p-2.5 xs:p-3 sm:p-4 md:p-5 flex flex-col justify-between bg-[#06080F] ${
             isFlipped ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         >
           {/* Inner Card Framing Line */}
-          <div className="absolute inset-2.5 sm:inset-3 rounded-2xl pointer-events-none border border-white/[0.08] border-dashed" />
+          <div className="absolute inset-2 sm:inset-3 rounded-2xl pointer-events-none border border-white/[0.08] border-dashed" />
 
           {/* Corner Pips */}
-          <div className="absolute top-3.5 left-3.5 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
-          <div className="absolute top-3.5 right-3.5 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
-          <div className="absolute bottom-3.5 left-3.5 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
-          <div className="absolute bottom-3.5 right-3.5 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
+          <div className="absolute top-2.5 left-2.5 xs:top-3 xs:left-3 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
+          <div className="absolute top-2.5 right-2.5 xs:top-3 xs:right-3 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
+          <div className="absolute bottom-2.5 left-2.5 xs:bottom-3 xs:left-3 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
+          <div className="absolute bottom-2.5 right-2.5 xs:bottom-3 xs:right-3 w-1.5 h-1.5 rounded-full z-20" style={{ backgroundColor: themeColor }} />
 
           {/* Ambient Radial Aura */}
           <div
@@ -640,17 +651,17 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           />
 
           {/* Card Back Header: Persona Name & Archetype Title */}
-          <div className="relative z-10 shrink-0 flex items-center justify-between w-full pt-1 px-1">
+          <div className="relative z-10 shrink-0 flex items-center justify-between w-full pt-0.5 px-0.5 sm:px-1">
             <div className="flex items-baseline gap-1.5 truncate">
               {archetype.personaName && (
                 <span
-                  className="text-xs sm:text-[13px] md:text-sm font-display font-black tracking-wider uppercase"
+                  className="text-xs sm:text-[13px] md:text-sm font-display font-black tracking-wider uppercase truncate"
                   style={{ color: themeColor }}
                 >
                   {archetype.personaName}
                 </span>
               )}
-              {archetype.personaName && <span className="text-white/40 text-xs">•</span>}
+              {archetype.personaName && <span className="text-white/40 text-xs shrink-0">•</span>}
               <span className="text-xs sm:text-[13px] md:text-sm font-display font-extrabold text-white tracking-tight truncate">
                 {archetype.title}
               </span>
@@ -658,7 +669,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           </div>
 
           {/* Center: The User's Encoded 6 Political Spectrums (High-Density Telemetry) */}
-          <div className="relative z-10 my-auto w-full flex flex-col gap-2 xs:gap-2.5 sm:gap-3.5 md:gap-4.5 px-1 py-1 sm:py-2">
+          <div className="relative z-10 my-auto w-full flex flex-col gap-1.5 xs:gap-2 sm:gap-2.5 md:gap-3.5 px-0.5 sm:px-1 py-1">
             {DIMENSIONS_CONFIG.map((cfg, idx) => {
               const score = getDimensionScore(cfg.id);
               return (
@@ -673,22 +684,18 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
             })}
           </div>
 
-          {/* Card Back Footer: Centered Verified Badge & Tap-to-flip affordance */}
-          <div className="relative z-10 shrink-0 flex flex-col gap-1.5 w-full bg-black/60 backdrop-blur-md px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl border border-white/[0.09]">
-            {/* Centered Verified Badge */}
-            <div className="flex items-center justify-center gap-1.5 text-[9px] sm:text-[9.5px] font-mono text-emerald-400 font-bold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A54]" />
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF]" />
-              <ShieldCheck size={11} className="text-emerald-400" />
-              <span>VERIFIED BY HERETIQ · {verifiedDate}</span>
-            </div>
-
-            {/* Tap to flip back bar */}
-            <div className="flex justify-between items-center pt-1 border-t border-white/[0.06] text-[9px] font-mono text-[#64748B]">
-              <span>HERETIQ 2026 EDITION</span>
-              <div className="flex items-center gap-1 text-white font-bold cursor-pointer hover:text-white/80 transition-colors">
-                <span>TAP TO FLIP FRONT</span>
-                <RotateCcw size={9} className="text-white" />
+          {/* Card Back Footer: Sleek Single-Line Affordance */}
+          <div className="relative z-10 shrink-0 w-full bg-black/60 backdrop-blur-md px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl border border-white/[0.09]">
+            <div className="flex justify-between items-center w-full text-[8px] xs:text-[8.5px] sm:text-[9.5px] font-mono">
+              <div className="flex items-center gap-1.5 text-emerald-400 font-bold tracking-wider uppercase truncate mr-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A54] shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] shrink-0" />
+                <ShieldCheck size={11} className="text-emerald-400 shrink-0" />
+                <span className="truncate">HERETIQ VERIFIED</span>
+              </div>
+              <div className="flex items-center gap-1 text-[#94A3B8] hover:text-white font-semibold transition-colors shrink-0">
+                <span>TAP TO FLIP</span>
+                <RotateCcw size={9} className="shrink-0" />
               </div>
             </div>
           </div>
