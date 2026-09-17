@@ -629,60 +629,8 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 isForging ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
             >
-              {/* Row 1: Primary Action Buttons: Share my result & Save image */}
-              <div className={`grid grid-cols-2 gap-1.5 sm:gap-2 relative ${
-                !isForging ? 'animate-deck-module-1' : 'opacity-0'
-              }`}>
-                <GlassButton
-                  type="button"
-                  onClick={handleShareResult}
-                  disabled={isExporting}
-                  className="relative overflow-hidden py-2 sm:py-2.5 lg:py-3 px-2.5 sm:px-3.5 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] lg:text-sm uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
-                >
-                  <Share2 size={13} strokeWidth={2.5} />
-                  <span>Share result</span>
-                </GlassButton>
-                <GlassButton
-                  type="button"
-                  onClick={handleSaveImage}
-                  disabled={isExporting}
-                  className="py-2 sm:py-2.5 lg:py-3 px-2.5 sm:px-3.5 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] lg:text-sm uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
-                >
-                  <Download size={13} strokeWidth={2.5} />
-                  <span>Save image</span>
-                </GlassButton>
-              </div>
-
-              {/* Row 2: Secondary Action - Invite a Friend */}
-              <div className={`w-full ${!isForging ? 'animate-deck-module-2' : 'opacity-0'}`}>
-                <GlassButton
-                  type="button"
-                  onClick={handleInviteFriend}
-                  className="w-full py-1.5 sm:py-2 lg:py-2.5 px-3 liquid-glass-button text-[11px] sm:text-xs lg:text-sm font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
-                >
-                  {copiedQuizLink ? (
-                    <>
-                      <Check size={12} className="text-emerald-400 shrink-0" />
-                      <span className="text-emerald-400 font-bold truncate">Link Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send size={11} className="text-[#0066FF] shrink-0" />
-                      <span>Invite a friend to take the quiz</span>
-                    </>
-                  )}
-                </GlassButton>
-              </div>
-
-              {exportMessage && (
-                <div className="text-xs font-mono text-white text-center py-1 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
-                  <Sparkles size={12} className="text-[#F59E0B] animate-spin" />
-                  <span>{exportMessage}</span>
-                </div>
-              )}
-
-              {/* Row 3: Trigger Button to Open/Close Deep Dive - High visibility */}
-              <div className={!isForging ? 'animate-deck-module-3' : 'opacity-0'}>
+              {/* Row 1: Trigger Button to Open/Close Deep Dive - High visibility */}
+              <div className={!isForging ? 'animate-deck-module-1' : 'opacity-0'}>
                 <GlassButton
                   type="button"
                   onClick={() => setIsSidePanelOpen(prev => !prev)}
@@ -710,6 +658,58 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   </div>
                 </GlassButton>
               </div>
+
+              {/* Row 2: Primary Action Buttons: Share my result & Save image */}
+              <div className={`grid grid-cols-2 gap-1.5 sm:gap-2 relative ${
+                !isForging ? 'animate-deck-module-2' : 'opacity-0'
+              }`}>
+                <GlassButton
+                  type="button"
+                  onClick={handleShareResult}
+                  disabled={isExporting}
+                  className="relative overflow-hidden py-2 sm:py-2.5 lg:py-3 px-2.5 sm:px-3.5 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] lg:text-sm uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
+                >
+                  <Share2 size={13} strokeWidth={2.5} />
+                  <span>Share result</span>
+                </GlassButton>
+                <GlassButton
+                  type="button"
+                  onClick={handleSaveImage}
+                  disabled={isExporting}
+                  className="py-2 sm:py-2.5 lg:py-3 px-2.5 sm:px-3.5 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] lg:text-sm uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                >
+                  <Download size={13} strokeWidth={2.5} />
+                  <span>Save image</span>
+                </GlassButton>
+              </div>
+
+              {/* Row 3: Secondary Action - Invite a Friend */}
+              <div className={`w-full ${!isForging ? 'animate-deck-module-3' : 'opacity-0'}`}>
+                <GlassButton
+                  type="button"
+                  onClick={handleInviteFriend}
+                  className="w-full py-1.5 sm:py-2 lg:py-2.5 px-3 liquid-glass-button text-[11px] sm:text-xs lg:text-sm font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
+                >
+                  {copiedQuizLink ? (
+                    <>
+                      <Check size={12} className="text-emerald-400 shrink-0" />
+                      <span className="text-emerald-400 font-bold truncate">Link Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={11} className="text-[#0066FF] shrink-0" />
+                      <span>Invite a friend to take the quiz</span>
+                    </>
+                  )}
+                </GlassButton>
+              </div>
+
+              {exportMessage && (
+                <div className="text-xs font-mono text-white text-center py-1 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
+                  <Sparkles size={12} className="text-[#F59E0B] animate-spin" />
+                  <span>{exportMessage}</span>
+                </div>
+              )}
             </div>
           </div>
 
