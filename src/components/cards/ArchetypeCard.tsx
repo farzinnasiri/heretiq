@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Archetype, ClassicalCompassResult, Dimension, Scores } from '../../domain/types';
 import { RotateCcw, ShieldCheck } from 'lucide-react';
 import { formatVerifiedDate } from '../../domain/dateUtils';
+import { preloadImage, isImagePreloaded } from '../../utils/imagePreloader';
 
 export type ForgePhase =
   | 'idle'
@@ -300,7 +301,28 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
   };
 
   const themeColor = archetype.cardColor || '#0066FF';
-  const imageSrc = archetype.cardImagePath || `/archetypes/${archetype.id}.png`;
+  const fullImageSrc = archetype.fullCardImagePath || `/archetypes/${archetype.id}.webp`;
+  const thumbImageSrc = archetype.thumbnailImagePath || archetype.cardImagePath || `/archetypes/thumbs/${archetype.id}.webp`;
+
+  const [activeImageSrc, setActiveImageSrc] = useState<string>(() => {
+    return isImagePreloaded(fullImageSrc) ? fullImageSrc : thumbImageSrc;
+  });
+
+  useEffect(() => {
+    if (isImagePreloaded(fullImageSrc)) {
+      setActiveImageSrc(fullImageSrc);
+      return;
+    }
+
+    preloadImage(fullImageSrc)
+      .then(() => {
+        setActiveImageSrc(fullImageSrc);
+      })
+      .catch(() => {
+        setActiveImageSrc(thumbImageSrc);
+      });
+  }, [fullImageSrc, thumbImageSrc]);
+
   const verifiedDate = formatVerifiedDate();
 
   const isForgeFlipping = forgePhase === 'flip_to_back' || forgePhase === 'flip_to_front';
@@ -541,7 +563,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           {/* Character Cutout Stage (Pops out in 3D over card border on hover) */}
           <div className="relative z-30 flex-1 min-h-0 w-full flex items-end justify-center pointer-events-none overflow-visible -mb-3.5 sm:-mb-4">
             <img
-              src={imageSrc}
+              src={activeImageSrc}
               alt={archetype.title}
               className={`w-full h-full object-contain object-bottom filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.7)] group-hover:drop-shadow-[0_30px_60px_rgba(0,0,0,0.98)] origin-bottom transition-all duration-500 ease-out ${
                 isCutoutHidden
@@ -549,8 +571,9 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
                   : 'opacity-100 scale-[1.12] sm:scale-[1.16] md:scale-[1.18] group-hover:scale-[1.28] sm:group-hover:scale-[1.32] translate-y-3.5 sm:translate-y-4 group-hover:translate-y-0.5 sm:group-hover:translate-y-1'
               }`}
               loading="eager"
+              decoding="async"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/archetypes/card-back.png';
+                (e.target as HTMLImageElement).src = '/archetypes/card-back.webp';
               }}
             />
           </div>

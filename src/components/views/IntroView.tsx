@@ -380,10 +380,13 @@ export const IntroView: React.FC<IntroViewProps> = ({
                     {/* Center: Character Persona Cutout (Unclipped, seamless, constrained) */}
                     <div className="relative grow min-h-0 flex items-center justify-center my-0.5 z-10">
                       <img
-                        src={arch.cardImagePath || `/archetypes/${arch.id}.png`}
+                        src={arch.thumbnailImagePath || arch.cardImagePath || `/archetypes/thumbs/${arch.id}.webp`}
                         alt={arch.title}
+                        width={166}
+                        height={234}
                         className="h-full w-full max-h-full max-w-full object-contain pointer-events-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] transition-transform duration-300 group-hover:scale-105"
                         loading="eager"
+                        decoding="async"
                       />
                     </div>
 

@@ -15,6 +15,7 @@ import { evaluateTensions, evaluateHeresy, EvaluatedTension } from '../domain/te
 import { evaluateFoil, FoilEvaluation } from '../domain/foil';
 import { generateCardSerial } from '../domain/cardId';
 import { parseSharedCard, generateShareUrl, reconstructPresentedFromAnswers } from '../domain/shareUrl';
+import { preloadArchetypeAssets } from '../utils/imagePreloader';
 
 const STORAGE_KEY = 'heretiq_run_v0.1';
 const LEGACY_STORAGE_KEY = 'tell_run_v0.1';
@@ -207,6 +208,17 @@ export function useCompassStore(): CompassStore {
       }
     }
   }, [screen, shareableUrl, isSharedLink]);
+
+  // Proactively preload the full-resolution artwork for the leading archetype
+  // when approaching the end of the quiz (or on the result screen)
+  useEffect(() => {
+    const fullImg = archetypeResult?.archetype?.fullCardImagePath;
+    if (fullImg) {
+      if (currentQuestionIndex >= 14 || screen === 'result') {
+        preloadArchetypeAssets(fullImg);
+      }
+    }
+  }, [currentQuestionIndex, screen, archetypeResult]);
 
   // Handle incoming hash changes
   useEffect(() => {

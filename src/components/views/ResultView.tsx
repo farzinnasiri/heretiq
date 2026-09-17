@@ -26,6 +26,7 @@ import { NotableFigures } from '../results/NotableFigures';
 import { ArchetypeCard, ForgePhase } from '../cards/ArchetypeCard';
 import { ShareModal } from '../modals/ShareModal';
 import { ResetConfirmModal } from '../modals/ResetConfirmModal';
+import { preloadArchetypeAssets } from '../../utils/imagePreloader';
 import {
   Share2,
   Download,
@@ -222,6 +223,12 @@ export const ResultView: React.FC<ResultViewProps> = ({
     }
     setIsCardFlipped(flipped);
   }, [clearAllTimers, forgePhase]);
+
+  // Proactively preload the full-resolution archetype artwork during oracle proclamation animation
+  useEffect(() => {
+    const fullImg = archetypeResult.archetype.fullCardImagePath || `/archetypes/${archetypeResult.archetype.id}.webp`;
+    preloadArchetypeAssets(fullImg);
+  }, [archetypeResult.archetype]);
 
   // Handle cinematic forge card reveal choreography on mount - runs strictly once if triggerForge is true
   useEffect(() => {

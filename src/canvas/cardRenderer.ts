@@ -338,8 +338,8 @@ export async function renderCardToCanvas(
   const ctx = canvas.getContext('2d', { alpha: false });
   if (!ctx) throw new Error('Could not get 2D canvas context');
 
-  // Preload archetype character image
-  const imageSrc = archetype.cardImagePath || `/archetypes/${archetype.id}.png`;
+  // Preload full-resolution archetype character image
+  const imageSrc = archetype.fullCardImagePath || archetype.cardImagePath || `/archetypes/${archetype.id}.webp`;
   const characterImg = await loadImage(imageSrc);
 
   // Background deep obsidian void

@@ -81,6 +81,8 @@ export interface Archetype {
   prototype: Record<Dimension, number>;
   description: string;
   cardImagePath?: string;
+  thumbnailImagePath?: string;
+  fullCardImagePath?: string;
   cardColor?: string;
   exemplars?: Exemplar[];
 }
