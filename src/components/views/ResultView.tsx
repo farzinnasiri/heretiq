@@ -526,18 +526,21 @@ export const ResultView: React.FC<ResultViewProps> = ({
       </div>
 
       {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion */}
-      <main className="relative z-30 grow flex flex-col justify-center items-center min-h-0 w-full overflow-visible py-2 sm:py-3 lg:my-auto px-2 sm:px-4">
+      <main className="relative z-30 grow flex flex-col justify-center items-center min-h-0 w-full overflow-visible py-2 sm:py-3 px-2 sm:px-4">
         <div
           className={`w-full flex flex-col lg:flex-row items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
               ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12 lg:items-start'
-              : 'max-w-[360px] sm:max-w-[370px] md:max-w-[380px] gap-0'
+              : 'w-full gap-0'
           }`}
         >
           {/* Left Column: Hero Card & Actions Deck */}
-          <div className={`w-full max-w-[330px] sm:max-w-[350px] md:max-w-[360px] shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30 ${
-            isSidePanelOpen ? 'lg:sticky lg:top-4' : ''
-          }`}>
+          <div
+            className={`w-full shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30 ${
+              isSidePanelOpen ? 'lg:sticky lg:top-4' : ''
+            }`}
+            style={{ maxWidth: 'min(340px, calc((100dvh - 240px) * 0.75))' }}
+          >
             {/* Collectible Playing Card (Hero) */}
             <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
               {/* Oracle Proclamation Intro Overlay: 2-Phase Cinematic Reveal */}
@@ -614,7 +617,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 onFlipChange={handleCardFlip}
                 isPopping={forgePhase === 'cutout_impact' || forgePhase === 'fill_front'}
                 forgePhase={forgePhase}
-                className="w-full max-w-[290px] xs:max-w-[315px] sm:max-w-[330px] md:max-w-[340px] lg:max-w-[340px] xl:max-w-[350px]"
+                className="w-full"
               />
             </div>
 
@@ -711,31 +714,27 @@ export const ResultView: React.FC<ResultViewProps> = ({
           {/* ========================================================================= */}
           {/* DESKTOP IN-CANVAS DEEP DIVE: Fluid Responsive Panel                       */}
           {/* ========================================================================= */}
-          <div
-            className={`hidden lg:block z-10 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              isSidePanelOpen
-                ? 'flex-1 min-w-0 max-w-[880px] xl:max-w-[940px] opacity-100 pointer-events-auto'
-                : 'max-w-0 opacity-0 pointer-events-none'
-            }`}
-          >
-            {/* Right Panel Inner Wrapper - fluid and responsive, never overflows */}
-            <div className="w-full flex flex-col justify-between min-w-0">
-              {/* Desktop Close Button (No title, no separator) */}
-              <div className="flex justify-end shrink-0 mb-2">
-                <GlassButton
-                  type="button"
-                  onClick={() => setIsSidePanelOpen(false)}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.14] border border-white/[0.10] hover:border-white/25 text-xs font-mono text-[#CBD5E1] hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
-                  title="Close Deep Dive"
-                >
-                  <span>Close</span>
-                  <X size={14} />
-                </GlassButton>
-              </div>
+          {isSidePanelOpen && (
+            <div className="hidden lg:block z-10 overflow-hidden flex-1 min-w-0 max-w-[880px] xl:max-w-[940px] animate-fade-in">
+              {/* Right Panel Inner Wrapper - fluid and responsive, never overflows */}
+              <div className="w-full flex flex-col justify-between min-w-0">
+                {/* Desktop Close Button (No title, no separator) */}
+                <div className="flex justify-end shrink-0 mb-2">
+                  <GlassButton
+                    type="button"
+                    onClick={() => setIsSidePanelOpen(false)}
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.14] border border-white/[0.10] hover:border-white/25 text-xs font-mono text-[#CBD5E1] hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                    title="Close Deep Dive"
+                  >
+                    <span>Close</span>
+                    <X size={14} />
+                  </GlassButton>
+                </div>
 
-              {renderAllSections(isSidePanelOpen)}
+                {renderAllSections(true)}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 
@@ -750,10 +749,12 @@ export const ResultView: React.FC<ResultViewProps> = ({
       />
 
       <GlassPanel
-        className={`glass-sheet lg:hidden fixed z-50 flex flex-col will-change-transform inset-x-0 bottom-0 max-h-[88dvh] w-full rounded-t-3xl shadow-[0_-20px_60px_rgba(0,0,0,0.9)] bg-[#080B14]/96 backdrop-blur-2xl border-t border-white/20 transition-transform ${
+        className={`glass-sheet lg:hidden fixed z-50 flex flex-col will-change-transform inset-x-0 bottom-0 max-h-[88dvh] w-full rounded-t-3xl bg-[#080B14]/96 backdrop-blur-2xl border-t border-white/20 transition-all ${
           dragOffsetY > 0 ? 'duration-0' : 'duration-350 ease-[cubic-bezier(0.32,0.72,0,1)]'
         } ${
-          isSidePanelOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none'
+          isSidePanelOpen
+            ? 'translate-y-0 opacity-100 shadow-[0_-20px_60px_rgba(0,0,0,0.9)]'
+            : 'translate-y-full opacity-0 pointer-events-none shadow-none'
         }`}
         style={dragOffsetY > 0 ? { transform: `translateY(${dragOffsetY}px)` } : undefined}
       >
