@@ -353,7 +353,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
                         ? `0 0 0 2px #FFFFFF, 0 0 22px 2px rgba(255, 255, 255, 0.65), 0 0 45px 6px ${themeColor}70, inset 0 0 16px 1px ${themeColor}30, 0 20px 45px -5px rgba(0, 0, 0, 0.95)`
                         : undefined,
                     }}
-                    className={`absolute inset-0 rounded-2xl overflow-hidden cursor-pointer flex flex-col justify-between p-2 sm:p-3 select-none group transition-all duration-300 ${
+                    className={`intro-carousel-card absolute inset-0 rounded-2xl overflow-hidden cursor-pointer flex flex-col justify-between p-2 sm:p-3 select-none group transition-all duration-300 ${
                       isFront
                         ? 'border-2 z-30'
                         : 'border-[1.5px] border-white/25 hover:border-white/60 shadow-[0_8px_30px_-5px_rgba(0,0,0,0.85)] z-10 hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:scale-[1.02]'
@@ -361,7 +361,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
                   >
                     {/* Seamless Organic Card Backlight Aura (Card-Level, no square clipping) */}
                     <div
-                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 rounded-full blur-2xl pointer-events-none opacity-45"
+                      className="intro-card-aura absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 rounded-full blur-2xl pointer-events-none opacity-45"
                       style={{ backgroundColor: themeColor }}
                     />
 

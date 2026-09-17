@@ -37,6 +37,10 @@ export const ConstellationBackground: React.FC = () => {
     let stars: Star[] = [];
     let shootingStars: ShootingStar[] = [];
     let lastShootingStarTime = Date.now();
+    const keepStatic =
+      window.matchMedia('(max-width: 1023px)').matches ||
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const starPalettes = [
       'rgba(235, 242, 255,', // pure cool white/silver (80%)
@@ -62,8 +66,9 @@ export const ConstellationBackground: React.FC = () => {
     };
 
     const initStars = () => {
-      // Calibrate star count: ~75 on mobile, ~140 on desktop
-      const count = Math.max(70, Math.min(150, Math.floor((width * height) / 9500)));
+      const count = keepStatic
+        ? Math.max(38, Math.min(55, Math.floor((width * height) / 14000)))
+        : Math.max(70, Math.min(150, Math.floor((width * height) / 9500)));
       stars = [];
 
       for (let i = 0; i < count; i++) {
@@ -108,9 +113,6 @@ export const ConstellationBackground: React.FC = () => {
         decay: 0.02 + Math.random() * 0.015,
       });
     };
-
-    resize();
-    window.addEventListener('resize', resize);
 
     let isVisible = true;
     const handleVisibilityChange = () => {
@@ -176,13 +178,14 @@ export const ConstellationBackground: React.FC = () => {
         }
       }
 
-      // Draw stars with organic twinkle & subtle drift
+      // Draw stars with organic twinkle & subtle drift on capable viewports.
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
 
-        // Drift
-        s.x += s.vx;
-        s.y += s.vy;
+        if (!keepStatic) {
+          s.x += s.vx;
+          s.y += s.vy;
+        }
 
         // Wrap around viewport boundaries smoothly
         if (s.x < -10) s.x = width + 10;
@@ -191,7 +194,7 @@ export const ConstellationBackground: React.FC = () => {
         else if (s.y > height + 10) s.y = -10;
 
         // Twinkle factor
-        const twinkle = Math.sin(now * s.twinkleSpeed + s.twinklePhase);
+        const twinkle = keepStatic ? 0 : Math.sin(now * s.twinkleSpeed + s.twinklePhase);
         const currentAlpha = Math.max(0.12, Math.min(1, s.baseAlpha + twinkle * 0.25));
 
         ctx.beginPath();
@@ -210,7 +213,7 @@ export const ConstellationBackground: React.FC = () => {
 
       // Rare shooting star (every 8-14 seconds)
       const nowMs = Date.now();
-      if (nowMs - lastShootingStarTime > 9000 && Math.random() < 0.008) {
+      if (!keepStatic && nowMs - lastShootingStarTime > 9000 && Math.random() < 0.008) {
         spawnShootingStar();
         lastShootingStarTime = nowMs;
       }
@@ -243,14 +246,23 @@ export const ConstellationBackground: React.FC = () => {
         ctx.stroke();
       }
 
-      animId = requestAnimationFrame(render);
+      if (!keepStatic) {
+        animId = requestAnimationFrame(render);
+      }
     };
 
-    animId = requestAnimationFrame(render);
+    const handleResize = () => {
+      resize();
+      if (keepStatic) render(performance.now());
+    };
+
+    resize();
+    render(performance.now());
+    window.addEventListener('resize', handleResize);
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);

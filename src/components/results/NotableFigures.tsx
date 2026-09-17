@@ -91,11 +91,11 @@ const ExemplarCard: React.FC<{
       href={exemplar.wikipediaUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative glass-panel p-2 lg:p-2.5 rounded-xl border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition-all duration-300 flex items-center gap-2 sm:gap-2.5 cursor-pointer overflow-hidden shadow-sm hover:shadow-[0_0_25px_rgba(255,255,255,0.08)] min-w-0"
+      className="group relative glass-panel p-2 lg:p-1.5 xl:p-2.5 rounded-xl border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition-all duration-300 flex items-center gap-2 sm:gap-2.5 lg:gap-1.5 xl:gap-2.5 cursor-pointer overflow-hidden shadow-sm hover:shadow-[0_0_25px_rgba(255,255,255,0.08)] min-w-0"
       title={`Read about ${exemplar.name} on Wikipedia`}
     >
       {/* Face Thumbnail / Fallback Avatar */}
-      <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-lg shrink-0 overflow-hidden border border-white/15 group-hover:border-white/30 bg-[#0E121B] shadow-inner flex items-center justify-center">
+      <div className="relative w-8 h-8 sm:w-8.5 sm:h-8.5 lg:w-7.5 lg:h-7.5 xl:w-10 xl:h-10 rounded-lg shrink-0 overflow-hidden border border-white/15 group-hover:border-white/30 bg-[#0E121B] shadow-inner flex items-center justify-center">
         {thumbUrl && !imgError ? (
           <img
             src={thumbUrl}
@@ -123,7 +123,7 @@ const ExemplarCard: React.FC<{
       {/* Details: Name & Role */}
       <div className="flex-1 min-w-0 flex flex-col justify-center">
         <div className="flex items-center gap-1">
-          <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-white truncate">
+          <span className="text-[11px] sm:text-xs xl:text-[13px] font-bold text-white group-hover:text-white truncate">
             {exemplar.name}
           </span>
           <ExternalLink
@@ -131,7 +131,7 @@ const ExemplarCard: React.FC<{
             className="text-white/35 group-hover:text-white/80 shrink-0 transition-colors"
           />
         </div>
-        <p className="text-[9px] sm:text-[10px] text-[#94A3B8] group-hover:text-white/80 line-clamp-1 leading-tight mt-0.5">
+        <p className="text-[9px] sm:text-[10px] xl:text-[11px] text-[#94A3B8] group-hover:text-white/80 line-clamp-1 leading-tight mt-0.5">
           {exemplar.role}
         </p>
       </div>
@@ -157,11 +157,11 @@ export const NotableFigures: React.FC<NotableFiguresProps> = ({
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: accentColor }}
           />
-          <span className="text-[11px] font-mono tracking-widest text-[#64748B] uppercase font-bold">
+          <span className="text-[11px] xl:text-xs font-mono tracking-widest text-[#64748B] uppercase font-bold">
             SHARED MINDS & FIGURES
           </span>
         </div>
-        <span className="text-[10px] font-mono text-[#94A3B8]/60">
+        <span className="text-[10px] xl:text-[11px] font-mono text-[#94A3B8]/60">
           5 notable {archetypeTitle}s
         </span>
       </div>

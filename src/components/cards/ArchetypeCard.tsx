@@ -403,11 +403,11 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
             transition: cardTransition,
             background: `radial-gradient(ellipse at 50% 45%, ${themeColor}26 0%, ${themeColor}0c 50%, #07090E 85%)`,
           }}
-          className="relative z-40 w-full h-full rounded-3xl shadow-2xl transition-shadow duration-500 group"
+          className="performance-card-shell relative z-40 w-full h-full rounded-3xl shadow-2xl transition-shadow duration-500 group"
         >
         {/* Holographic Border Outline (Layered behind cutout so cutout can overlay border) */}
         <div
-          className={`absolute inset-0 rounded-3xl pointer-events-none border z-15 transition-opacity duration-300 ${
+          className={`performance-card-border absolute inset-0 rounded-3xl pointer-events-none border z-15 transition-opacity duration-300 ${
             forgePhase === 'oracle_intro' || forgePhase === 'trace_border'
               ? 'opacity-0'
               : 'opacity-100'
@@ -423,7 +423,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
         {/* Interactive Specular Holographic Foil Sheen */}
         <div
-          className="absolute inset-0 rounded-3xl pointer-events-none mix-blend-overlay z-15 transition-opacity duration-300"
+          className="performance-card-sheen absolute inset-0 rounded-3xl pointer-events-none mix-blend-overlay z-15 transition-opacity duration-300"
           style={{
             background: `radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 60%)`,
             opacity: isHovered ? 0.45 : 0.18,
@@ -513,7 +513,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           {/* Clipped Inner Aura Background */}
           <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none z-0">
             <div
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-72 sm:h-72 rounded-full blur-[70px] transition-all duration-700 ${
+              className={`performance-card-aura absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-72 sm:h-72 rounded-full blur-[70px] transition-all duration-700 ${
                 isFrontHidden
                   ? 'opacity-10'
                   : isImpactPunching
@@ -574,7 +574,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
             <img
               src={activeImageSrc}
               alt={archetype.title}
-              className={`w-full h-full object-contain object-bottom filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.7)] group-hover:drop-shadow-[0_30px_60px_rgba(0,0,0,0.98)] origin-bottom transition-all duration-500 ease-out ${
+              className={`performance-card-art w-full h-full object-contain object-bottom filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.7)] group-hover:drop-shadow-[0_30px_60px_rgba(0,0,0,0.98)] origin-bottom transition-all duration-500 ease-out ${
                 isCutoutHidden
                   ? 'opacity-0 scale-90 translate-y-6'
                   : 'opacity-100 scale-[1.12] sm:scale-[1.16] md:scale-[1.18] group-hover:scale-[1.28] sm:group-hover:scale-[1.32] translate-y-3.5 sm:translate-y-4 group-hover:translate-y-0.5 sm:group-hover:translate-y-1'
@@ -646,7 +646,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
           {/* Ambient Radial Aura */}
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full blur-[80px] pointer-events-none opacity-30"
+            className="performance-card-aura absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full blur-[80px] pointer-events-none opacity-30"
             style={{ backgroundColor: themeColor }}
           />
 

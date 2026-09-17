@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-lg: 900px;
+}
+
 @layer base {
   :root {
     --bg-void: #05060A;
@@ -34,7 +38,7 @@
     max-width: 100vw;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 900px) {
     html, body, #root {
       height: 100dvh;
       max-height: 100dvh;
@@ -185,6 +189,57 @@ button.glass-primary:hover:not(:disabled) { background-color: rgba(255, 255, 255
   .glass-surface { background: #171e2d !important; border-color: #8c9bb5; }
   .glass-surface.glass-primary { background: #f3f6ff !important; color: #05060a; }
   .glass-surface.glass-sheet { background: #0c111c !important; }
+}
+
+/* Mobile GPUs struggle when several live displacement and backdrop filters
+   overlap. Keep the same material hierarchy with simple translucent fills. */
+@media (max-width: 1023px), (pointer: coarse) {
+  .glass-material {
+    display: none;
+  }
+
+  .glass-surface {
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+
+  .glass-surface.glass-sheet {
+    background-color: rgba(8, 11, 20, 0.98) !important;
+  }
+
+  [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .result-card-stage {
+    filter: none !important;
+  }
+
+  .result-card-ambient,
+  .performance-card-aura,
+  .performance-card-sheen,
+  .intro-card-aura {
+    display: none;
+  }
+
+  .performance-card-shell {
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.58) !important;
+    will-change: transform;
+  }
+
+  .performance-card-border {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.58) !important;
+  }
+
+  .performance-card-art {
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.62)) !important;
+    transition-property: transform, opacity !important;
+  }
+
+  .intro-carousel-card {
+    transition-property: transform, opacity !important;
+  }
 }
 
 /* Glow effects */

@@ -70,7 +70,7 @@ export const ClassicalCompassWidget: React.FC<ClassicalCompassWidgetProps> = ({
     <div className={`w-full flex justify-center ${className}`}>
       {/* 2-Axis Classical Compass Box */}
       <div
-        className="relative w-full max-w-[280px] sm:max-w-[310px] lg:max-w-[290px] xl:max-w-[310px] aspect-[4/3.1] bg-[#060810] border border-white/20 rounded-2xl overflow-hidden shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] select-none"
+        className="relative w-full max-w-[280px] sm:max-w-[310px] lg:max-w-[245px] xl:max-w-[330px] 2xl:max-w-[360px] aspect-[4/3.1] bg-[#060810] border border-white/20 rounded-2xl overflow-hidden shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] select-none"
         role="img"
         aria-label={`Classical Political Compass: ${result.quadrantTitle}`}
       >
