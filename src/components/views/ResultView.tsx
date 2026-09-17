@@ -526,19 +526,17 @@ export const ResultView: React.FC<ResultViewProps> = ({
       </div>
 
       {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion */}
-      <main className="relative z-30 grow flex flex-col justify-center items-center min-h-0 w-full overflow-visible py-2 sm:py-3 px-2 sm:px-4">
+      <main className="relative z-30 grow flex flex-col items-center justify-start min-h-0 w-full overflow-visible py-2 sm:py-3 lg:pt-3 px-2 sm:px-4">
         <div
-          className={`w-full flex flex-col lg:flex-row items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-full flex flex-col lg:flex-row items-center lg:items-start justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
-              ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12 lg:items-start'
+              ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12'
               : 'max-w-[440px] sm:max-w-[460px] md:max-w-[480px] gap-0'
           }`}
         >
-          {/* Left Column: Hero Card & Actions Deck - Smoothly moves left when Deep Dive expands */}
+          {/* Left Column: Hero Card & Actions Deck - Anchored vertically, glides smoothly left without vertical hopping */}
           <div
-            className={`w-full max-w-[340px] sm:max-w-[360px] md:max-w-[370px] shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              isSidePanelOpen ? 'lg:sticky lg:top-4' : ''
-            }`}
+            className="w-full max-w-[340px] sm:max-w-[360px] md:max-w-[370px] shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30 lg:sticky lg:top-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
           >
             {/* Collectible Playing Card (Hero) */}
             <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
