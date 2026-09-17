@@ -12,12 +12,14 @@ import { ARCHETYPES } from '../../domain/archetypes';
 
 interface IntroViewProps {
   onStart: () => void;
+  isStartPromptOpen?: boolean;
   onOpenHowItWorks: () => void;
   onOpenPrivacy: () => void;
 }
 
 export const IntroView: React.FC<IntroViewProps> = ({
   onStart,
+  isStartPromptOpen = false,
   onOpenHowItWorks,
   onOpenPrivacy,
 }) => {
@@ -98,7 +100,10 @@ export const IntroView: React.FC<IntroViewProps> = ({
 
   // Keyboard controls
   useEffect(() => {
+    if (isStartPromptOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLSelectElement) return;
       lastInteractionRef.current = Date.now();
       if (e.key === 'ArrowLeft') {
         rotateTo((activeIdx - 1 + count) % count);
@@ -124,7 +129,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [activeIdx, currentRot, onStart]);
+  }, [activeIdx, currentRot, isStartPromptOpen, onStart]);
 
   // Handle card click: clicking a side card rotates it to center; clicking center card starts quiz
   const handleCardClick = (idx: number, isFront: boolean, e: React.MouseEvent) => {

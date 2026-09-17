@@ -5,16 +5,26 @@ import { QuestionView } from './components/views/QuestionView';
 import { ResultView } from './components/views/ResultView';
 import { MethodSheet } from './components/modals/MethodSheet';
 import { PrivacySheet } from './components/modals/PrivacySheet';
+import { QuestionLanguagePrompt } from './components/modals/QuestionLanguagePrompt';
 import { ConstellationBackground } from './components/ui/ConstellationBackground';
+import type { QuestionLanguage } from './domain/questionTranslations';
 
 export const App: React.FC = () => {
   const store = useCompassStore();
 
   const [isMethodOpen, setIsMethodOpen] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isLanguagePromptOpen, setIsLanguagePromptOpen] = useState(false);
+  const [questionLanguage, setQuestionLanguage] = useState<QuestionLanguage>('en');
 
   const currentItem = store.presented[store.currentQuestionIndex];
   const totalCoreCount = 18;
+
+  const requestQuizStart = () => setIsLanguagePromptOpen(true);
+  const startQuizWithLanguage = () => {
+    setIsLanguagePromptOpen(false);
+    store.startNewQuiz();
+  };
 
   return (
     <div className="min-h-dvh bg-[#05060A] text-[#F3F4F6] relative isolate selection:bg-[#FF2A54]/30 selection:text-white overflow-x-hidden">
@@ -24,7 +34,8 @@ export const App: React.FC = () => {
       {/* Intro View */}
       {store.screen === 'intro' && (
         <IntroView
-          onStart={store.startNewQuiz}
+          onStart={requestQuizStart}
+          isStartPromptOpen={isLanguagePromptOpen}
           onOpenHowItWorks={() => setIsMethodOpen(true)}
           onOpenPrivacy={() => setIsPrivacyOpen(true)}
         />
@@ -37,6 +48,8 @@ export const App: React.FC = () => {
           presentedItem={currentItem}
           itemIndex={store.currentQuestionIndex}
           totalCoreCount={totalCoreCount}
+          questionLanguage={questionLanguage}
+          onQuestionLanguageChange={setQuestionLanguage}
           onRecordAnswer={store.recordAnswer}
           onBack={store.goToPreviousQuestion}
         />
@@ -79,6 +92,14 @@ export const App: React.FC = () => {
       <PrivacySheet
         isOpen={isPrivacyOpen}
         onClose={() => setIsPrivacyOpen(false)}
+      />
+
+      <QuestionLanguagePrompt
+        isOpen={store.screen === 'intro' && isLanguagePromptOpen}
+        language={questionLanguage}
+        onLanguageChange={setQuestionLanguage}
+        onContinue={startQuizWithLanguage}
+        onCancel={() => setIsLanguagePromptOpen(false)}
       />
     </div>
   );

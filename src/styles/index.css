@@ -254,11 +254,11 @@ button.glass-primary:hover:not(:disabled) { background-color: rgba(255, 255, 255
   }
 
   .mobile-card-touch-stage-active {
-    transform: translateY(-10px) scale(1.045);
+    transform: translateY(-6px) scale(1.025);
   }
 
   .mobile-card-art-active {
-    transform: translateY(0) scale(1.28) !important;
+    transform: translateY(5px) scale(1.24) !important;
   }
 
   .performance-card-mobile-aura {

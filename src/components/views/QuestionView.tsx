@@ -2,12 +2,20 @@ import { GlassButton } from '../ui/Glass';
 import React, { useState, useEffect, useRef } from 'react';
 import { PresentedItem, Choice } from '../../domain/types';
 import { QUESTION_BANK } from '../../domain/questions';
-import { ArrowLeft, Check } from 'lucide-react';
+import {
+  getQuestionCopy,
+  isQuestionLanguageRtl,
+  QUESTION_LANGUAGE_OPTIONS,
+} from '../../domain/questionTranslations';
+import type { QuestionLanguage } from '../../domain/questionTranslations';
+import { ArrowLeft, Check, ChevronDown } from 'lucide-react';
 
 interface QuestionViewProps {
   presentedItem: PresentedItem;
   itemIndex: number;
   totalCoreCount?: number;
+  questionLanguage: QuestionLanguage;
+  onQuestionLanguageChange: (language: QuestionLanguage) => void;
   onRecordAnswer: (questionId: string, choice: Choice) => void;
   onBack: () => void;
 }
@@ -16,10 +24,13 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   presentedItem,
   itemIndex,
   totalCoreCount = 18,
+  questionLanguage,
+  onQuestionLanguageChange,
   onRecordAnswer,
   onBack,
 }) => {
   const q = QUESTION_BANK[presentedItem.questionId];
+  const questionCopy = q ? getQuestionCopy(q, questionLanguage) : null;
   const [prevQuestionId, setPrevQuestionId] = useState(presentedItem.questionId);
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(presentedItem.choice);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -50,7 +61,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        e.target instanceof HTMLSelectElement
+      ) {
         return;
       }
       if (e.key === 'ArrowLeft' || e.key === '1' || e.code === 'Digit1' || e.code === 'Numpad1') {
@@ -65,9 +80,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [presentedItem.displayOrder, isTransitioning]);
 
-  if (!q) return null;
+  if (!q || !questionCopy) return null;
 
   const progressFraction = Math.min(1, (itemIndex + 1) / totalCoreCount);
+  const questionDirection = isQuestionLanguageRtl(questionLanguage) ? 'rtl' : 'ltr';
 
   return (
     <div className="min-h-dvh sm:h-dvh sm:max-h-dvh overflow-x-hidden overflow-y-auto sm:overflow-hidden flex flex-col justify-between px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom,16px))] sm:p-5 lg:px-8 lg:py-5 max-w-5xl mx-auto select-none">
@@ -95,8 +111,31 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             </div>
           </div>
 
-          {/* Right: Counter badge */}
+          {/* Right: Question language and counter */}
           <div className="flex items-center gap-3 text-xs font-mono">
+            <label className="sr-only" htmlFor="question-language">
+              Question language
+            </label>
+            <div className="relative">
+              <select
+                id="question-language"
+                value={questionLanguage}
+                onChange={event => onQuestionLanguageChange(event.target.value as QuestionLanguage)}
+                aria-label="Question language"
+                className="appearance-none bg-[#0E121B] text-[#CBD5E1] px-2.5 py-1 pr-7 rounded-full border border-white/10 font-mono text-[11px] sm:text-xs cursor-pointer outline-hidden focus:border-white/30"
+              >
+                {QUESTION_LANGUAGE_OPTIONS.map(language => (
+                  <option key={language.value} value={language.value}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={14}
+                aria-hidden="true"
+                className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-[#CBD5E1]"
+              />
+            </div>
             <span className="bg-[#0E121B] text-white px-3 py-0.5 rounded-full border border-white/10 font-bold tracking-wider text-xs">
               <span className="text-white">{itemIndex + 1}</span>
               <span className="text-[#64748B] mx-1">/</span>
@@ -124,9 +163,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           <h2
             ref={promptHeadingRef}
             tabIndex={-1}
+            lang={questionLanguage}
+            dir={questionDirection}
             className="text-[21px] xs:text-[24px] sm:text-2xl md:text-3xl lg:text-[32px] font-display font-extrabold leading-snug sm:leading-tight text-white outline-hidden max-w-2xl text-balance"
           >
-            {q.prompt}
+            {questionCopy.prompt}
           </h2>
         </div>
 
@@ -135,7 +176,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           {/* Neutral Choices: Option 1 vs Option 2 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 w-full mb-3 sm:mb-4">
             {presentedItem.displayOrder.map((choiceKey, displayIndex) => {
-              const text = q.choices[choiceKey];
+              const text = questionCopy.choices[choiceKey];
               const isSelected = selectedChoice === choiceKey;
               const optionNumber = displayIndex + 1;
 
@@ -169,7 +210,13 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   </div>
 
                   {/* Choice Text */}
-                  <div className="text-sm xs:text-[15px] sm:text-base md:text-lg font-semibold text-white mt-2.5 sm:mt-3 leading-snug">
+                  <div
+                    lang={questionLanguage}
+                    dir={questionDirection}
+                    className={`text-sm xs:text-[15px] sm:text-base md:text-lg font-semibold text-white mt-2.5 sm:mt-3 leading-snug ${
+                      questionDirection === 'rtl' ? 'text-right' : 'text-left'
+                    }`}
+                  >
                     {text}
                   </div>
                 </GlassButton>
