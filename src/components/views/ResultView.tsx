@@ -419,7 +419,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
   const isForging = forgePhase !== 'settled';
 
   return (
-    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-between px-2 pt-[max(0.6rem,env(safe-area-inset-top,12px))] pb-[max(1.2rem,env(safe-area-inset-bottom,20px))] sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
+    <div className="min-h-dvh w-full flex flex-col justify-between px-2 pt-[max(0.6rem,env(safe-area-inset-top,12px))] pb-[max(1.2rem,env(safe-area-inset-bottom,20px))] sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto">
       {/* Skip Forge Animation Button - Bottom centered so it never collides with top header buttons */}
       {isForging && (
         <GlassButton
@@ -524,19 +524,19 @@ export const ResultView: React.FC<ResultViewProps> = ({
         </div>
       </div>
 
-      {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion - z-30 sits strictly above header */}
-      <main className="relative z-30 grow flex flex-col justify-between items-center min-h-0 w-full overflow-visible py-1 sm:py-2 lg:my-auto px-2 sm:px-4">
+      {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion */}
+      <main className="relative z-30 grow flex flex-col justify-center items-center min-h-0 w-full overflow-visible py-2 sm:py-3 lg:my-auto px-2 sm:px-4">
         <div
-          className={`w-full grow flex flex-col lg:flex-row items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-full flex flex-col lg:flex-row items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
               ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12'
               : 'max-w-[440px] sm:max-w-[460px] md:max-w-[480px] gap-0'
           }`}
         >
-          {/* Left Column: Hero Card & Actions Deck - ALWAYS full size, moves to the left when Deep Dive is open */}
-          <div className="w-full max-w-[440px] sm:max-w-[460px] md:max-w-[480px] shrink-0 grow flex flex-col items-center justify-between min-h-0 gap-2 xs:gap-2.5 sm:gap-3 relative z-30">
-            {/* Collectible Playing Card (Hero) - z-40 ensures card is ALWAYS above buttons & header */}
-            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full grow flex justify-center items-center my-auto min-h-0 pb-1 sm:pb-2">
+          {/* Left Column: Hero Card & Actions Deck */}
+          <div className="w-full max-w-[420px] sm:max-w-[440px] md:max-w-[460px] shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30">
+            {/* Collectible Playing Card (Hero) */}
+            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
               {/* Oracle Proclamation Intro Overlay: 2-Phase Cinematic Reveal */}
               {forgePhase === 'oracle_intro' && (
                 <div
@@ -611,7 +611,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 onFlipChange={handleCardFlip}
                 isPopping={forgePhase === 'cutout_impact' || forgePhase === 'fill_front'}
                 forgePhase={forgePhase}
-                className="w-full max-w-[310px] xs:max-w-[335px] sm:max-w-[380px] md:max-w-[440px]"
+                className="w-full max-w-[300px] xs:max-w-[320px] sm:max-w-[340px] md:max-w-[360px] lg:max-w-[350px] xl:max-w-[380px]"
               />
             </div>
 

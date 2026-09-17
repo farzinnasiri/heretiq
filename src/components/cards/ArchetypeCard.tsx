@@ -376,7 +376,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
       {/* Radiant Shockwave Ring Layer on Impact (Option 1) */}
       {isImpactPunching && (
         <div
-          className="absolute pointer-events-none rounded-3xl border-2 z-10 animate-card-shockwave w-full max-w-[310px] xs:max-w-[335px] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4]"
+          className="absolute pointer-events-none rounded-3xl border-2 z-10 animate-card-shockwave w-full max-w-[300px] xs:max-w-[320px] sm:max-w-[340px] md:max-w-[360px] lg:max-w-[350px] xl:max-w-[380px] aspect-[3/4]"
           style={{
             borderColor: themeColor,
             boxShadow: `0 0 50px 10px ${themeColor}70, inset 0 0 30px ${themeColor}40`,
@@ -386,7 +386,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
       {/* Elastic Spring Punch Wrapper - completely isolates spring bounce from 3D card tilt */}
       <div
-        className={`w-full max-w-[310px] xs:max-w-[335px] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4] flex justify-center items-center relative ${
+        className={`w-full max-w-[300px] xs:max-w-[320px] sm:max-w-[340px] md:max-w-[360px] lg:max-w-[350px] xl:max-w-[380px] aspect-[3/4] flex justify-center items-center relative ${
           isImpactPunching ? 'animate-card-impact-punch' : ''
         }`}
         style={{ transformStyle: 'preserve-3d' }}
