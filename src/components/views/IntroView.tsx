@@ -543,6 +543,9 @@ export const IntroView: React.FC<IntroViewProps> = ({
               }`}
               style={{
                 background: 'linear-gradient(135deg, #FF2A54 0%, #7928CA 50%, #0066FF 100%)',
+                // Size the gradient through the border so the opposite edge cannot repeat underneath it.
+                backgroundOrigin: 'border-box',
+                backgroundRepeat: 'no-repeat',
               }}
             >
               {/* Cylindrical Keycap Top Convex Highlight */}
