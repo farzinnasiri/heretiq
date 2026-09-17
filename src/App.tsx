@@ -33,6 +33,7 @@ export const App: React.FC = () => {
       {/* Question Screen */}
       {store.screen === 'question' && currentItem && (
         <QuestionView
+          key={currentItem.questionId}
           presentedItem={currentItem}
           itemIndex={store.currentQuestionIndex}
           totalCoreCount={totalCoreCount}

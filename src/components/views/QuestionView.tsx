@@ -20,13 +20,19 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   onBack,
 }) => {
   const q = QUESTION_BANK[presentedItem.questionId];
+  const [prevQuestionId, setPrevQuestionId] = useState(presentedItem.questionId);
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(presentedItem.choice);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const promptHeadingRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
+  // Synchronously reset choice and transition lock if question advances without unmount
+  if (prevQuestionId !== presentedItem.questionId) {
+    setPrevQuestionId(presentedItem.questionId);
     setSelectedChoice(presentedItem.choice);
     setIsTransitioning(false);
+  }
+
+  useEffect(() => {
     promptHeadingRef.current?.focus();
   }, [presentedItem.questionId]);
 
@@ -135,7 +141,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
               return (
                 <GlassButton
-                  key={choiceKey}
+                  key={`${presentedItem.questionId}-${displayIndex}`}
                   aria-pressed={isSelected}
                   onClick={() => handleSelect(choiceKey)}
                   disabled={isTransitioning}
