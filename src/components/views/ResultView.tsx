@@ -419,7 +419,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
   const isForging = forgePhase !== 'settled';
 
   return (
-    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col items-center justify-start px-2 pt-[max(0.5rem,env(safe-area-inset-top,10px))] pb-[max(1rem,env(safe-area-inset-bottom,16px))] sm:p-3 lg:px-6 lg:py-2 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
+    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col items-center justify-start lg:justify-center px-2 pt-[max(0.6rem,env(safe-area-inset-top,10px))] pb-[max(1rem,env(safe-area-inset-bottom,16px))] sm:p-3 lg:px-6 lg:py-4 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
       {/* Skip Forge Animation Button - Bottom centered so it never collides with top header buttons */}
       {isForging && (
         <button
@@ -452,8 +452,8 @@ export const ResultView: React.FC<ResultViewProps> = ({
       )}
 
       {/* Result controls */}
-      <div className="relative flex justify-center items-center w-full shrink-0 px-1 xs:px-2 py-0.5 xs:py-1 sm:py-1.5 lg:py-1 z-40">
-        <div className="grid grid-cols-[1fr_1fr_1.4fr_1fr_1fr] items-start gap-2 xs:gap-3 sm:gap-4 lg:gap-4 w-full max-w-[420px] py-0.5 sm:py-1 lg:py-0.5">
+      <div className="relative flex justify-center items-center w-full shrink-0 px-1 xs:px-2 py-0.5 sm:py-1 mb-2 sm:mb-2.5 lg:mb-3 z-40">
+        <div className="grid grid-cols-[1fr_1fr_1.4fr_1fr_1fr] items-start gap-2 xs:gap-3 sm:gap-4 lg:gap-5 w-full max-w-[430px] py-0.5">
           {/* 1. Animate Button */}
           <div className="flex flex-col items-center gap-0.5 xs:gap-1">
             <GlassButton
@@ -526,17 +526,17 @@ export const ResultView: React.FC<ResultViewProps> = ({
       </div>
 
       {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion */}
-      <main className="relative z-30 grow flex flex-col items-center justify-start min-h-0 w-full overflow-visible py-1 sm:py-2 lg:pt-1.5 lg:pb-1 px-2 sm:px-4">
+      <main className="relative z-30 flex flex-col items-center justify-center min-h-0 w-full overflow-visible px-2 sm:px-4">
         <div
           className={`w-full flex flex-col lg:flex-row items-center lg:items-start justify-center transition-[max-width,gap] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
-              ? 'max-w-[1360px] xl:max-w-[1420px] gap-6 xl:gap-8'
+              ? 'max-w-[1360px] xl:max-w-[1440px] gap-6 xl:gap-8'
               : 'max-w-[440px] sm:max-w-[460px] md:max-w-[480px] gap-0'
           }`}
         >
           {/* Left Column: Hero Card & Actions Deck - Anchored vertically at top, glides smoothly left without vertical hopping */}
           <div
-            className="w-full max-w-[340px] sm:max-w-[360px] md:max-w-[370px] lg:max-w-[305px] xl:max-w-[325px] shrink-0 flex flex-col items-center justify-start gap-1.5 sm:gap-2 relative z-30"
+            className="w-full max-w-[340px] sm:max-w-[360px] md:max-w-[370px] lg:max-w-[350px] xl:max-w-[365px] shrink-0 flex flex-col items-center justify-start gap-2 sm:gap-2.5 relative z-30"
           >
             {/* Collectible Playing Card (Hero) */}
             <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
@@ -620,30 +620,30 @@ export const ResultView: React.FC<ResultViewProps> = ({
 
             {/* Action CTAs & Drawer Trigger (Staggered High-Tech Entry) - z-10 layered behind card */}
             <div
-              className={`flex flex-col gap-1.5 sm:gap-2 w-full shrink-0 relative z-10 transition-opacity duration-300 ${
+              className={`flex flex-col gap-2 sm:gap-2.5 w-full shrink-0 relative z-10 transition-opacity duration-300 ${
                 isForging ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
             >
               {/* Row 1: Primary Action Buttons: Share my result & Save image */}
-              <div className={`grid grid-cols-2 gap-1.5 sm:gap-2 relative ${
+              <div className={`grid grid-cols-2 gap-2 relative ${
                 !isForging ? 'animate-deck-module-1' : 'opacity-0'
               }`}>
                 <GlassButton
                   type="button"
                   onClick={handleShareResult}
                   disabled={isExporting}
-                  className="relative overflow-hidden py-2 sm:py-2.5 lg:py-2 px-2.5 sm:px-3.5 bg-white text-[#05060A] font-extrabold text-[11px] sm:text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
+                  className="relative overflow-hidden py-2.5 sm:py-3 px-3 sm:px-4 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
                 >
-                  <Share2 size={13} strokeWidth={2.5} />
+                  <Share2 size={14} strokeWidth={2.5} />
                   <span className="truncate">Share result</span>
                 </GlassButton>
                 <GlassButton
                   type="button"
                   onClick={handleSaveImage}
                   disabled={isExporting}
-                  className="py-2 sm:py-2.5 lg:py-2 px-2.5 sm:px-3.5 liquid-glass-button text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                  className="py-2.5 sm:py-3 px-3 sm:px-4 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
                 >
-                  <Download size={13} strokeWidth={2.5} />
+                  <Download size={14} strokeWidth={2.5} />
                   <span className="truncate">Save image</span>
                 </GlassButton>
               </div>
@@ -653,16 +653,16 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 <GlassButton
                   type="button"
                   onClick={handleInviteFriend}
-                  className="w-full py-1.5 sm:py-2 lg:py-1.5 px-3 liquid-glass-button text-[10.5px] sm:text-[11.5px] font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
+                  className="w-full py-2 sm:py-2.5 px-3 sm:px-4 liquid-glass-button text-[11px] sm:text-xs font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
                 >
                   {copiedQuizLink ? (
                     <>
-                      <Check size={12} className="text-emerald-400 shrink-0" />
+                      <Check size={13} className="text-emerald-400 shrink-0" />
                       <span className="text-emerald-400 font-bold truncate">Link Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Send size={11} className="text-[#0066FF] shrink-0" />
+                      <Send size={12} className="text-[#0066FF] shrink-0" />
                       <span className="truncate">Invite a friend to take the quiz</span>
                     </>
                   )}
@@ -681,7 +681,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 <GlassButton
                   type="button"
                   onClick={() => setIsSidePanelOpen(prev => !prev)}
-                  className="w-full py-2 sm:py-2.5 lg:py-2 px-3 sm:px-4 rounded-xl text-white font-sans text-[11px] sm:text-xs font-semibold flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/30 transition-all"
+                  className="w-full py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl text-white font-sans text-xs sm:text-[13px] font-semibold flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/30 transition-all"
                 >
                   <div className="flex items-center gap-1.5 truncate mr-2">
                     <Sparkles size={14} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0" />
