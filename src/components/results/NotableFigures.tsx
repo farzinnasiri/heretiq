@@ -91,11 +91,11 @@ const ExemplarCard: React.FC<{
       href={exemplar.wikipediaUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative glass-panel p-3 sm:p-3.5 rounded-2xl border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition-all duration-300 flex items-center gap-3 cursor-pointer overflow-hidden shadow-sm hover:shadow-[0_0_25px_rgba(255,255,255,0.08)] min-w-0"
+      className="group relative glass-panel p-2 lg:p-2.5 rounded-xl border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition-all duration-300 flex items-center gap-2 sm:gap-2.5 cursor-pointer overflow-hidden shadow-sm hover:shadow-[0_0_25px_rgba(255,255,255,0.08)] min-w-0"
       title={`Read about ${exemplar.name} on Wikipedia`}
     >
       {/* Face Thumbnail / Fallback Avatar */}
-      <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl shrink-0 overflow-hidden border border-white/15 group-hover:border-white/30 bg-[#0E121B] shadow-inner flex items-center justify-center">
+      <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-lg shrink-0 overflow-hidden border border-white/15 group-hover:border-white/30 bg-[#0E121B] shadow-inner flex items-center justify-center">
         {thumbUrl && !imgError ? (
           <img
             src={thumbUrl}
@@ -106,16 +106,16 @@ const ExemplarCard: React.FC<{
           />
         ) : isLoading ? (
           <div className="w-full h-full animate-pulse bg-white/10 flex items-center justify-center">
-            <User size={15} className="text-white/30" />
+            <User size={13} className="text-white/30" />
           </div>
         ) : (
           <div
-            className="w-full h-full flex items-center justify-center text-[11px] font-mono font-bold text-white shadow-inner"
+            className="w-full h-full flex items-center justify-center text-[10px] font-mono font-bold text-white shadow-inner"
             style={{
               background: `linear-gradient(135deg, ${accentColor}33, rgba(255,255,255,0.05))`,
             }}
           >
-            {initials || <User size={15} className="text-white/60" />}
+            {initials || <User size={13} className="text-white/60" />}
           </div>
         )}
       </div>
@@ -123,15 +123,15 @@ const ExemplarCard: React.FC<{
       {/* Details: Name & Role */}
       <div className="flex-1 min-w-0 flex flex-col justify-center">
         <div className="flex items-center gap-1">
-          <span className="text-xs sm:text-[13px] font-bold text-white group-hover:text-white truncate">
+          <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-white truncate">
             {exemplar.name}
           </span>
           <ExternalLink
-            size={11}
+            size={10}
             className="text-white/35 group-hover:text-white/80 shrink-0 transition-colors"
           />
         </div>
-        <p className="text-[10px] sm:text-[11px] text-[#94A3B8] group-hover:text-white/80 line-clamp-1 leading-tight mt-0.5">
+        <p className="text-[9px] sm:text-[10px] text-[#94A3B8] group-hover:text-white/80 line-clamp-1 leading-tight mt-0.5">
           {exemplar.role}
         </p>
       </div>
@@ -151,22 +151,22 @@ export const NotableFigures: React.FC<NotableFiguresProps> = ({
 
   return (
     <section className="w-full min-w-0">
-      <div className="flex items-center justify-between gap-2 mb-3.5 sm:mb-4">
+      <div className="flex items-center justify-between gap-2 mb-2 lg:mb-2.5">
         <div className="flex items-center gap-2">
           <span
-            className="w-2.5 h-2.5 rounded-full"
+            className="w-2 h-2 rounded-full"
             style={{ backgroundColor: accentColor }}
           />
-          <span className="text-xs font-mono tracking-widest text-[#64748B] uppercase font-bold">
+          <span className="text-[11px] font-mono tracking-widest text-[#64748B] uppercase font-bold">
             SHARED MINDS & FIGURES
           </span>
         </div>
-        <span className="text-[10.5px] font-mono text-[#94A3B8]/60">
+        <span className="text-[10px] font-mono text-[#94A3B8]/60">
           5 notable {archetypeTitle}s
         </span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5 xl:gap-3 w-full">
         {exemplars.slice(0, 5).map((exemplar, index) => (
           <div
             key={exemplar.name}

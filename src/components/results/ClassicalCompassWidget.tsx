@@ -70,7 +70,7 @@ export const ClassicalCompassWidget: React.FC<ClassicalCompassWidgetProps> = ({
     <div className={`w-full flex justify-center ${className}`}>
       {/* 2-Axis Classical Compass Box */}
       <div
-        className="relative w-full max-w-[390px] sm:max-w-[420px] aspect-[4/3.2] bg-[#060810] border border-white/20 rounded-2xl overflow-hidden shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] select-none"
+        className="relative w-full max-w-[280px] sm:max-w-[310px] lg:max-w-[290px] xl:max-w-[310px] aspect-[4/3.1] bg-[#060810] border border-white/20 rounded-2xl overflow-hidden shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] select-none"
         role="img"
         aria-label={`Classical Political Compass: ${result.quadrantTitle}`}
       >
@@ -84,16 +84,16 @@ export const ClassicalCompassWidget: React.FC<ClassicalCompassWidgetProps> = ({
         />
 
         {/* Subtle Quadrant Corner Tags */}
-        <span className="absolute top-2.5 left-3 text-[8px] sm:text-[8.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
+        <span className="absolute top-2 left-2.5 text-[7px] sm:text-[7.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
           AUTH-LEFT
         </span>
-        <span className="absolute top-2.5 right-3 text-[8px] sm:text-[8.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
+        <span className="absolute top-2 right-2.5 text-[7px] sm:text-[7.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
           AUTH-RIGHT
         </span>
-        <span className="absolute bottom-2.5 left-3 text-[8px] sm:text-[8.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
+        <span className="absolute bottom-2 left-2.5 text-[7px] sm:text-[7.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
           LIB-LEFT
         </span>
-        <span className="absolute bottom-2.5 right-3 text-[8px] sm:text-[8.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
+        <span className="absolute bottom-2 right-2.5 text-[7px] sm:text-[7.5px] font-mono uppercase tracking-wider text-white/30 pointer-events-none">
           LIB-RIGHT
         </span>
 
@@ -102,10 +102,10 @@ export const ClassicalCompassWidget: React.FC<ClassicalCompassWidgetProps> = ({
         <div className="absolute top-1/2 left-0 right-0 h-px bg-white/20 -translate-y-1/2 pointer-events-none" />
 
         {/* Vertical Axis Top/Bottom Labels */}
-        <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[8.5px] sm:text-[9.5px] font-mono font-bold uppercase tracking-wider text-white pointer-events-none bg-[#060810]/80 px-1.5 py-0.5 rounded">
+        <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[7.5px] sm:text-[8.5px] font-mono font-bold uppercase tracking-wider text-white pointer-events-none bg-[#060810]/80 px-1.5 py-0.5 rounded leading-none">
           AUTHORITARIAN
         </span>
-        <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[8.5px] sm:text-[9.5px] font-mono font-bold uppercase tracking-wider text-white pointer-events-none bg-[#060810]/80 px-1.5 py-0.5 rounded">
+        <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7.5px] sm:text-[8.5px] font-mono font-bold uppercase tracking-wider text-white pointer-events-none bg-[#060810]/80 px-1.5 py-0.5 rounded leading-none">
           LIBERTARIAN
         </span>
 
@@ -114,7 +114,7 @@ export const ClassicalCompassWidget: React.FC<ClassicalCompassWidgetProps> = ({
           <React.Fragment key={m.key}>
             {/* Tick mark on axis line */}
             <div
-              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-px h-2.5 sm:h-3 bg-white/40 pointer-events-none z-0"
+              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-px h-2 sm:h-2.5 bg-white/40 pointer-events-none z-0"
               style={{ left: `${m.pct}%` }}
             />
             {/* Marker dot on axis line */}
@@ -124,7 +124,7 @@ export const ClassicalCompassWidget: React.FC<ClassicalCompassWidgetProps> = ({
             />
             {/* Position Badge Label below axis */}
             <span
-              className={`absolute top-[calc(50%+6px)] sm:top-[calc(50%+7px)] -translate-x-1/2 text-[7px] sm:text-[7.5px] md:text-[8px] font-mono font-bold tracking-wider uppercase px-1 py-0.5 rounded bg-[#060810]/85 border ${m.borderColor} ${m.textColor} pointer-events-none z-0 whitespace-nowrap shadow-sm select-none`}
+              className={`absolute top-[calc(50%+5px)] sm:top-[calc(50%+6px)] -translate-x-1/2 text-[6.5px] sm:text-[7.5px] font-mono font-bold tracking-wider uppercase px-1 py-0.5 rounded bg-[#060810]/85 border ${m.borderColor} ${m.textColor} pointer-events-none z-0 whitespace-nowrap shadow-sm select-none leading-none`}
               style={{ left: `${m.pct}%` }}
             >
               <span className="hidden xs:inline">{m.labelFull}</span>
@@ -140,12 +140,12 @@ export const ClassicalCompassWidget: React.FC<ClassicalCompassWidgetProps> = ({
         >
           {/* Radial Bloom Glow */}
           <div
-            className="absolute -inset-3 rounded-full blur-md opacity-80 animate-pulse pointer-events-none"
+            className="absolute -inset-2.5 rounded-full blur-md opacity-80 animate-pulse pointer-events-none"
             style={{ backgroundColor: pinColor }}
           />
           {/* White Outer Ring with Solid Accent Fill */}
           <div
-            className="relative w-4 h-4 rounded-full border-2 border-white shadow-[0_0_20px_rgba(255,255,255,0.8)]"
+            className="relative w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-white shadow-[0_0_20px_rgba(255,255,255,0.8)]"
             style={{ backgroundColor: pinColor }}
           />
         </div>
