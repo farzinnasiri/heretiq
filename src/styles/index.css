@@ -237,8 +237,57 @@ button.glass-primary:hover:not(:disabled) { background-color: rgba(255, 255, 255
     transition-property: transform, opacity !important;
   }
 
+  /* A small raised resting state teaches touch users that the cutout is
+     manipulable. The cue runs once, then leaves the card quietly elevated. */
+  .mobile-card-touch-stage {
+    transform: translateY(-5px);
+    transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
+  }
+
+  .mobile-card-touch-stage-peek {
+    animation: mobile-card-peek 720ms cubic-bezier(0.23, 1, 0.32, 1) 1 both;
+  }
+
+  .mobile-card-touch-stage-interacting {
+    animation: none !important;
+  }
+
+  .mobile-card-touch-stage-active {
+    transform: translateY(-10px) scale(1.045);
+  }
+
+  .mobile-card-art-active {
+    transform: translateY(0) scale(1.28) !important;
+  }
+
+  .performance-card-mobile-aura {
+    display: block;
+  }
+
   .intro-carousel-card {
     transition-property: transform, opacity !important;
+  }
+}
+
+@keyframes mobile-card-peek {
+  0% {
+    transform: translateY(-5px);
+  }
+  28% {
+    transform: translateY(-11px) scale(1.025) rotateZ(0.45deg);
+  }
+  52% {
+    transform: translateY(-3px) rotateZ(-0.15deg);
+  }
+  100% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .performance-card-mobile-aura {
+    display: none;
   }
 }
 

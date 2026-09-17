@@ -28,6 +28,30 @@ interface ArchetypeCardProps {
   forgePhase?: ForgePhase;
 }
 
+type TouchPhase = 'idle' | 'pressed' | 'dragging' | 'settling';
+
+interface TouchSession {
+  pointerId: number;
+  startX: number;
+  startY: number;
+  lastX: number;
+  lastTime: number;
+  startTime: number;
+  width: number;
+  height: number;
+  baseRotation: number;
+  wasFlipped: boolean;
+  dragging: boolean;
+  cancelled: boolean;
+}
+
+const TOUCH_DRAG_THRESHOLD = 10;
+const TOUCH_COMMIT_FRACTION = 0.2;
+const TOUCH_COMMIT_VELOCITY = 0.65;
+
+const clamp = (value: number, min: number, max: number): number =>
+  Math.max(min, Math.min(max, value));
+
 const DIMENSIONS_CONFIG: {
   id: Dimension;
   name: string;
@@ -45,6 +69,7 @@ const DIMENSIONS_CONFIG: {
 interface AnimatedDimensionRowProps {
   cfg: (typeof DIMENSIONS_CONFIG)[0];
   score: number;
+  isPreparing: boolean;
   isCounting: boolean;
   delayIndex: number;
 }
@@ -52,14 +77,23 @@ interface AnimatedDimensionRowProps {
 const AnimatedDimensionRow: React.FC<AnimatedDimensionRowProps> = ({
   cfg,
   score,
+  isPreparing,
   isCounting,
   delayIndex,
 }) => {
-  const [displayedScore, setDisplayedScore] = useState<number>(50);
-  const [isRowVisible, setIsRowVisible] = useState<boolean>(false);
-  const [isLockedIn, setIsLockedIn] = useState<boolean>(false);
+  const startsCentered = isPreparing || isCounting;
+  const [displayedScore, setDisplayedScore] = useState<number>(startsCentered ? 50 : score);
+  const [isRowVisible, setIsRowVisible] = useState<boolean>(!startsCentered);
+  const [isLockedIn, setIsLockedIn] = useState<boolean>(!startsCentered);
 
   useEffect(() => {
+    if (isPreparing) {
+      setDisplayedScore(50);
+      setIsRowVisible(false);
+      setIsLockedIn(false);
+      return;
+    }
+
     if (!isCounting) {
       setDisplayedScore(score);
       setIsRowVisible(true);
@@ -99,7 +133,7 @@ const AnimatedDimensionRow: React.FC<AnimatedDimensionRowProps> = ({
     }, staggerDelay);
 
     return () => clearTimeout(appearTimer);
-  }, [isCounting, score, delayIndex]);
+  }, [isPreparing, isCounting, score, delayIndex]);
 
   let badgeText = 'Balanced';
   let badgeColor = 'text-white/70 bg-white/5 border-white/10';
@@ -184,12 +218,19 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
   const [sheenY, setSheenY] = useState(50);
   const [isHovered, setIsHovered] = useState(false);
   const [internalFlipped, setInternalFlipped] = useState(false);
+  const [touchPhase, setTouchPhase] = useState<TouchPhase>('idle');
+  const [touchRotation, setTouchRotation] = useState<number | null>(null);
+  const [touchTiltX, setTouchTiltX] = useState(0);
+  const [touchSnap, setTouchSnap] = useState(false);
 
   const isFlipped = controlledFlipped !== undefined ? controlledFlipped : internalFlipped;
 
   const [isManualFlipping, setIsManualFlipping] = useState(false);
   const flipTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevFlippedRef = useRef(isFlipped);
+  const touchSessionRef = useRef<TouchSession | null>(null);
+  const touchSettleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const suppressClickRef = useRef(false);
 
   // When flip state changes, run smooth 850ms flip physics and zero out tilts
   useEffect(() => {
@@ -208,6 +249,12 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
       if (flipTimerRef.current) clearTimeout(flipTimerRef.current);
     };
   }, [isFlipped]);
+
+  useEffect(() => {
+    return () => {
+      if (touchSettleTimerRef.current) clearTimeout(touchSettleTimerRef.current);
+    };
+  }, []);
 
   // Screen-wide ambient mouse tracking (tracks cursor even outside the card)
   useEffect(() => {
@@ -291,6 +338,184 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
     onFlipChange?.(next);
   };
 
+  const clearTouchSettle = () => {
+    if (touchSettleTimerRef.current) {
+      clearTimeout(touchSettleTimerRef.current);
+      touchSettleTimerRef.current = null;
+    }
+  };
+
+  const finishTouchCancel = (session: TouchSession) => {
+    clearTouchSettle();
+    suppressClickRef.current = session.dragging || session.cancelled;
+    setTouchSnap(false);
+    setTouchTiltX(0);
+    setTouchPhase('settling');
+    setTouchRotation(session.baseRotation);
+    touchSettleTimerRef.current = setTimeout(() => {
+      touchSettleTimerRef.current = null;
+      setTouchRotation(null);
+      setTouchPhase('idle');
+    }, 180);
+  };
+
+  const finishTouchInteraction = (event: React.PointerEvent<HTMLDivElement>, cancelled = false) => {
+    const session = touchSessionRef.current;
+    if (!session || event.pointerId !== session.pointerId) return;
+
+    touchSessionRef.current = null;
+    if (cancelled || session.cancelled) {
+      finishTouchCancel(session);
+      return;
+    }
+
+    // A tap is intentionally left to the click handler, preserving the existing
+    // tap-to-flip affordance without adding a delay to the gesture.
+    if (!session.dragging) {
+      clearTouchSettle();
+      setTouchSnap(false);
+      setTouchRotation(null);
+      setTouchTiltX(0);
+      setTouchPhase('idle');
+      return;
+    }
+
+    const now = performance.now();
+    const deltaX = event.clientX - session.startX;
+    const velocityX = (event.clientX - session.lastX) / Math.max(1, now - session.lastTime);
+    const projectedDelta = deltaX + velocityX * 110;
+    const shouldFlip =
+      Math.abs(deltaX) >= session.width * TOUCH_COMMIT_FRACTION ||
+      Math.abs(projectedDelta) >= session.width * TOUCH_COMMIT_FRACTION ||
+      Math.abs(velocityX) >= TOUCH_COMMIT_VELOCITY;
+
+    suppressClickRef.current = true;
+    clearTouchSettle();
+    setTouchTiltX(0);
+
+    if (!shouldFlip) {
+      setTouchPhase('settling');
+      setTouchRotation(session.baseRotation);
+      touchSettleTimerRef.current = setTimeout(() => {
+        touchSettleTimerRef.current = null;
+        setTouchRotation(null);
+        setTouchPhase('idle');
+      }, 180);
+      return;
+    }
+
+    const direction = deltaX === 0 ? (velocityX >= 0 ? 1 : -1) : Math.sign(deltaX);
+    const targetRotation = session.wasFlipped
+      ? direction > 0 ? 360 : 0
+      : direction > 0 ? 180 : -180;
+    const nextFlipped = !session.wasFlipped;
+
+    setTouchPhase('settling');
+    setTouchRotation(targetRotation);
+    touchSettleTimerRef.current = setTimeout(() => {
+      touchSettleTimerRef.current = null;
+
+      // Keep the signed rotation on screen while the semantic face changes.
+      // The following snap removes the equivalent ±360° representation without
+      // making the card visibly spin a second time.
+      setTouchSnap(true);
+      setInternalFlipped(nextFlipped);
+      onFlipChange?.(nextFlipped);
+
+      window.requestAnimationFrame(() => {
+        setTouchRotation(null);
+        setTouchPhase('idle');
+        window.requestAnimationFrame(() => setTouchSnap(false));
+      });
+    }, 220);
+  };
+
+  const handleTouchPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'touch') {
+      suppressClickRef.current = false;
+      return;
+    }
+    if (!interactive || !cardRef.current || isManualFlipping || (forgePhase !== 'idle' && forgePhase !== 'settled')) {
+      return;
+    }
+
+    clearTouchSettle();
+    setTouchSnap(false);
+
+    const rect = cardRef.current.getBoundingClientRect();
+    const now = performance.now();
+    const startingRotation = touchRotation ?? (isFlipped ? 180 : 0);
+    touchSessionRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      lastTime: now,
+      startTime: now,
+      width: rect.width,
+      height: rect.height,
+      baseRotation: startingRotation,
+      wasFlipped: isFlipped,
+      dragging: false,
+      cancelled: false,
+    };
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setTouchRotation(startingRotation);
+    setTouchTiltX(0);
+    setTouchPhase('pressed');
+  };
+
+  const handleTouchPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const session = touchSessionRef.current;
+    if (!session || event.pointerId !== session.pointerId || session.cancelled) return;
+
+    const deltaX = event.clientX - session.startX;
+    const deltaY = event.clientY - session.startY;
+
+    if (!session.dragging) {
+      const horizontalIntent = Math.abs(deltaX) > TOUCH_DRAG_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY);
+      const verticalIntent = Math.abs(deltaY) > TOUCH_DRAG_THRESHOLD && Math.abs(deltaY) > Math.abs(deltaX);
+
+      if (verticalIntent) {
+        session.cancelled = true;
+        touchSessionRef.current = null;
+        finishTouchCancel(session);
+        return;
+      }
+      if (!horizontalIntent) return;
+      session.dragging = true;
+      setTouchPhase('dragging');
+    }
+
+    event.preventDefault();
+    const now = performance.now();
+    session.lastX = event.clientX;
+    session.lastTime = now;
+
+    const rawAngle = (deltaX / Math.max(1, session.width)) * 180;
+    const angleDelta = clamp(rawAngle, -180, 180);
+    const tilt = clamp(-(deltaY / Math.max(1, session.height)) * 7, -4, 4);
+    setTouchRotation(session.baseRotation + angleDelta);
+    setTouchTiltX(tilt);
+  };
+
+  const handleTouchPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    finishTouchInteraction(event);
+  };
+
+  const handleTouchPointerCancel = (event: React.PointerEvent<HTMLDivElement>) => {
+    finishTouchInteraction(event, true);
+  };
+
+  const handleCardClick = () => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
+    toggleCard();
+  };
+
   const handleCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     event.preventDefault();
@@ -299,6 +524,10 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
   const handleFaceClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
     toggleCard();
   };
 
@@ -336,16 +565,31 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
   const isForgeFlipping = forgePhase === 'flip_to_back' || forgePhase === 'flip_to_front';
   const isFlipping = isForgeFlipping || isManualFlipping;
+  const isTouchManipulating = touchPhase !== 'idle';
+  const isTouchActive = touchPhase === 'pressed' || touchPhase === 'dragging';
+  const isTouchRaised = touchPhase !== 'idle';
+  const visualRotationY = touchRotation ?? rotateY + (isFlipped ? 180 : 0);
+  const visualRotationX = touchRotation !== null ? touchTiltX : rotateX;
 
   const scaleFactor = isForgeFlipping
     ? 1.03
     : isManualFlipping
     ? 1.045
+    : isTouchRaised
+    ? 1.03
     : isHovered
     ? 1.025
     : 1;
 
-  const cardTransition = isForgeFlipping
+  const cardTransition = touchSnap
+    ? 'none'
+    : touchPhase === 'dragging'
+    ? 'none'
+    : touchPhase === 'settling'
+    ? 'transform 0.22s cubic-bezier(0.32, 0.72, 0, 1)'
+    : touchPhase === 'pressed'
+    ? 'transform 0.12s cubic-bezier(0.23, 1, 0.32, 1)'
+    : isForgeFlipping
     ? 'transform 1.1s cubic-bezier(0.2, 0.85, 0.25, 1)'
     : isManualFlipping
     ? 'transform 0.85s cubic-bezier(0.2, 0.85, 0.25, 1)'
@@ -362,8 +606,12 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
   return (
     <div
-      style={{ perspective: 1400, touchAction: 'manipulation' }}
-      onClick={toggleCard}
+      style={{ perspective: 1400, touchAction: 'pan-y' }}
+      onPointerDown={handleTouchPointerDown}
+      onPointerMove={handleTouchPointerMove}
+      onPointerUp={handleTouchPointerUp}
+      onPointerCancel={handleTouchPointerCancel}
+      onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
@@ -398,7 +646,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
         <div
           ref={cardRef}
           style={{
-            transform: `rotateX(${rotateX}deg) rotateY(${rotateY + (isFlipped ? 180 : 0)}deg) scale3d(${scaleFactor}, ${scaleFactor}, ${scaleFactor})`,
+            transform: `rotateX(${visualRotationX}deg) rotateY(${visualRotationY}deg) scale3d(${scaleFactor}, ${scaleFactor}, ${scaleFactor})`,
             transformStyle: 'preserve-3d',
             transition: cardTransition,
             background: `radial-gradient(ellipse at 50% 45%, ${themeColor}26 0%, ${themeColor}0c 50%, #07090E 85%)`,
@@ -504,14 +752,28 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
-            transition: isFlipping ? 'opacity 0.2s ease 0.38s' : 'opacity 0.2s ease',
+            transition: isTouchManipulating
+              ? 'none'
+              : isFlipping
+              ? 'opacity 0.2s ease 0.38s'
+              : 'opacity 0.2s ease',
           }}
           className={`absolute inset-0 w-full h-full rounded-3xl p-3.5 sm:p-4 md:p-5 flex flex-col justify-between overflow-visible ${
-            isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            isTouchManipulating
+              ? 'opacity-100 pointer-events-none'
+              : isFlipped
+              ? 'opacity-0 pointer-events-none'
+              : 'opacity-100'
           }`}
         >
           {/* Clipped Inner Aura Background */}
           <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none z-0">
+            <div
+              className="performance-card-mobile-aura absolute inset-0 pointer-events-none"
+              style={{
+                background: `radial-gradient(ellipse at 50% 43%, ${themeColor}58 0%, ${themeColor}2e 48%, transparent 79%)`,
+              }}
+            />
             <div
               className={`performance-card-aura absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-72 sm:h-72 rounded-full blur-[70px] transition-all duration-700 ${
                 isFrontHidden
@@ -570,14 +832,22 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           </div>
 
           {/* Character Cutout Stage (Pops out in 3D over card border on hover) */}
-          <div className="relative z-30 flex-1 min-h-0 w-full flex items-end justify-center pointer-events-none overflow-visible -mb-3.5 sm:-mb-4">
+          <div
+            className={`mobile-card-touch-stage relative z-30 flex-1 min-h-0 w-full flex items-end justify-center pointer-events-none overflow-visible -mb-3.5 sm:-mb-4 ${
+              interactive ? 'mobile-card-touch-stage-peek' : ''
+            } ${isTouchManipulating ? 'mobile-card-touch-stage-interacting' : ''} ${
+              isTouchActive ? 'mobile-card-touch-stage-active' : ''
+            }`}
+          >
             <img
               src={activeImageSrc}
               alt={archetype.title}
               className={`performance-card-art w-full h-full object-contain object-bottom filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.7)] group-hover:drop-shadow-[0_30px_60px_rgba(0,0,0,0.98)] origin-bottom transition-all duration-500 ease-out ${
                 isCutoutHidden
                   ? 'opacity-0 scale-90 translate-y-6'
-                  : 'opacity-100 scale-[1.12] sm:scale-[1.16] md:scale-[1.18] group-hover:scale-[1.28] sm:group-hover:scale-[1.32] translate-y-3.5 sm:translate-y-4 group-hover:translate-y-0.5 sm:group-hover:translate-y-1'
+                  : `opacity-100 scale-[1.22] sm:scale-[1.16] md:scale-[1.18] group-hover:scale-[1.28] sm:group-hover:scale-[1.32] translate-y-2 sm:translate-y-4 group-hover:translate-y-0.5 sm:group-hover:translate-y-1 ${
+                      isTouchActive ? 'mobile-card-art-active' : ''
+                    }`
               }`}
               loading="eager"
               decoding="async"
@@ -612,7 +882,8 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-1 text-[#94A3B8] hover:text-white transition-colors shrink-0">
-                <span>TAP TO FLIP</span>
+                <span className="sm:hidden">DRAG TO TURN</span>
+                <span className="hidden sm:inline">TAP TO FLIP</span>
                 <RotateCcw size={9} />
               </div>
             </div>
@@ -629,10 +900,18 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
-            transition: isFlipping ? 'opacity 0.2s ease 0.38s' : 'opacity 0.2s ease',
+            transition: isTouchManipulating
+              ? 'none'
+              : isFlipping
+              ? 'opacity 0.2s ease 0.38s'
+              : 'opacity 0.2s ease',
           }}
           className={`absolute inset-0 w-full h-full rounded-3xl overflow-hidden p-2.5 xs:p-3 sm:p-4 md:p-5 flex flex-col justify-between bg-[#06080F] ${
-            isFlipped ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            isTouchManipulating
+              ? 'opacity-100 pointer-events-none'
+              : isFlipped
+              ? 'opacity-100 pointer-events-auto'
+              : 'opacity-0 pointer-events-none'
           }`}
         >
           {/* Inner Card Framing Line */}
@@ -677,6 +956,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
                   key={cfg.id}
                   cfg={cfg}
                   score={score}
+                  isPreparing={forgePhase === 'flip_to_back'}
                   isCounting={forgePhase === 'count_matrix'}
                   delayIndex={idx}
                 />
@@ -694,7 +974,8 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
                 <span className="truncate">HERETIQ VERIFIED</span>
               </div>
               <div className="flex items-center gap-1 text-[#94A3B8] hover:text-white font-semibold transition-colors shrink-0">
-                <span>TAP TO FLIP</span>
+                <span className="sm:hidden">DRAG TO TURN</span>
+                <span className="hidden sm:inline">TAP TO FLIP</span>
                 <RotateCcw size={9} className="shrink-0" />
               </div>
             </div>

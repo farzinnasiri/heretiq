@@ -26,6 +26,9 @@ export const IntroView: React.FC<IntroViewProps> = ({
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== 'undefined' ? window.innerWidth : 1200
   );
+  const [windowHeight, setWindowHeight] = useState<number>(
+    typeof window !== 'undefined' ? window.innerHeight : 900
+  );
   const [isSpacePressed, setIsSpacePressed] = useState<boolean>(false);
 
   const isHoveredRef = useRef(false);
@@ -39,7 +42,10 @@ export const IntroView: React.FC<IntroViewProps> = ({
   currentRotRef.current = currentRot;
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -49,11 +55,12 @@ export const IntroView: React.FC<IntroViewProps> = ({
 
   const isMobile = windowWidth < 640;
   const isTablet = windowWidth >= 640 && windowWidth < 1024;
+  const isCompactMobile = isMobile && windowHeight < 700;
 
   // 3D Carousel Cylinder Dimensions - calibrated for bold presence with generous spacing
-  const radius = isMobile ? 275 : isTablet ? 320 : 355; // px
-  const cardW = isMobile ? 142 : isTablet ? 154 : 166; // px
-  const cardH = isMobile ? 200 : isTablet ? 218 : 234; // px
+  const radius = isCompactMobile ? 245 : isMobile ? 275 : isTablet ? 320 : 355; // px
+  const cardW = isCompactMobile ? 126 : isMobile ? 142 : isTablet ? 154 : 166; // px
+  const cardH = isCompactMobile ? 178 : isMobile ? 200 : isTablet ? 218 : 234; // px
 
   // Rotate smoothly to a specific archetype by shortest path
   const rotateTo = (targetIdx: number) => {
@@ -162,12 +169,12 @@ export const IntroView: React.FC<IntroViewProps> = ({
       {/* Top Header */}
       <header className="relative flex justify-between items-center w-full shrink-0 pt-1 pb-2 sm:pb-3">
         {/* Left: 100% Private On-Device badge */}
-        <GlassPanel className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-sm">
+        <GlassPanel className="flex items-center gap-1.5 px-2 min-[360px]:px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-sm">
           <ShieldCheck size={14} className="text-[#10B981]" />
           <span className="text-[11px] font-mono text-[#94A3B8] font-medium hidden sm:inline">
             100% private. Zero data stored.
           </span>
-          <span className="text-[11px] font-mono text-[#94A3B8] font-medium sm:hidden">
+          <span className="text-[11px] font-mono text-[#94A3B8] font-medium max-[359px]:hidden sm:hidden">
             100% Private
           </span>
         </GlassPanel>
@@ -208,15 +215,17 @@ export const IntroView: React.FC<IntroViewProps> = ({
       </header>
 
       {/* Main Center Stage: 3D Cylindrical Carousel */}
-      <main className="my-auto flex flex-col items-center text-center justify-between sm:justify-center grow py-2 sm:py-3 w-full max-w-6xl mx-auto">
+      <main className={`my-auto flex flex-col items-center text-center justify-start sm:justify-center grow sm:py-3 w-full max-w-6xl mx-auto ${isCompactMobile ? 'py-0' : 'py-2'}`}>
         {/* Headline with Elegant Tilted Stamp Label */}
-        <div className="relative inline-flex flex-col items-center justify-center max-w-4xl mx-auto mb-2.5 sm:mb-6 lg:mb-10 px-2 shrink-0">
-          {/* Mobile Eyebrow Stamp - bold, crisp, perfectly placed above headline */}
-          <GlassPanel className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_6px_20px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md mb-2.5 transform -rotate-[2deg] select-none">
+        <div className={`relative z-30 inline-flex flex-col items-center justify-center max-w-4xl mx-auto sm:mb-6 lg:mb-10 px-2 shrink-0 ${isCompactMobile ? 'mb-2' : 'mb-6'}`}>
+          {/* Mobile time cue sits beside the headline so it does not consume a row above it. */}
+          <GlassPanel
+            aria-label="Under 3 minutes"
+            className={`${isCompactMobile ? 'hidden' : 'flex'} sm:hidden absolute -left-10 top-1/2 -translate-y-1/2 w-12 h-12 flex-col items-center justify-center gap-0 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_6px_20px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md select-none`}
+          >
             <span className="w-2 h-2 rounded-full bg-[#FF2A54] shadow-[0_0_8px_#FF2A54] animate-pulse" />
-            <span className="text-[11px] font-mono tracking-wider text-[#94A3B8] uppercase flex items-center gap-1">
-              UNDER <span className="font-display font-black text-xs text-white tracking-tight">3 MINUTES</span>
-            </span>
+            <span className="text-[8px] font-mono tracking-[0.08em] text-[#94A3B8] uppercase leading-tight">UNDER</span>
+            <span className="font-display font-black text-[10px] text-white tracking-tight leading-tight">3 MIN</span>
           </GlassPanel>
 
           <div className="relative">
@@ -242,7 +251,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* 3D Round Carousel Stage - Generously sized for bold cards with ample clearance */}
-        <div className="relative w-full max-w-4xl lg:max-w-5xl h-[240px] sm:h-[305px] lg:h-[340px] flex items-center justify-center mb-2 sm:mb-4 lg:mb-6 shrink-0">
+        <div className={`relative z-10 w-full max-w-4xl lg:max-w-5xl sm:h-[305px] lg:h-[340px] flex items-center justify-center sm:mb-4 lg:mb-6 shrink-0 ${isCompactMobile ? 'h-[200px] mb-0' : 'h-[240px] mb-2'}`}>
           {/* Ambient Lighting Dome */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] sm:w-[660px] h-[260px] sm:h-[340px] rounded-full blur-[90px] pointer-events-none transition-colors duration-700 opacity-30"
@@ -407,7 +416,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* 12 Archetypes Navigator with Integrated Mobile Thumb Chevrons */}
-        <div className="flex items-center justify-center gap-3.5 sm:gap-2.5 my-3 sm:my-4 lg:my-5 shrink-0">
+        <div className={`flex items-center justify-center gap-3.5 sm:gap-2.5 sm:my-4 lg:my-5 shrink-0 ${isCompactMobile ? 'my-1' : 'my-3'}`}>
           {/* Mobile Thumb Prev Button - Enlarger for easier tapping */}
           <GlassButton
             type="button"
@@ -456,11 +465,11 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* Dynamic Archetype Inspector Banner / Pill - Bigger on mobile, generous padding */}
-        <div className="min-h-[80px] sm:min-h-[96px] flex items-center justify-center mb-2 sm:mb-5 lg:mb-6 px-2 w-full shrink-0">
+        <div className={`sm:min-h-[96px] flex items-center justify-center sm:mb-5 lg:mb-6 px-2 w-full shrink-0 ${isCompactMobile ? 'min-h-[66px] mb-2' : 'min-h-[80px] mb-5'}`}>
           {activeArchetype ? (
             <div
               key={activeArchetype.id}
-              className="w-full h-full max-w-[380px] sm:max-w-xl lg:max-w-2xl flex flex-col items-center justify-center text-center px-5 py-2 sm:px-7 sm:py-3 rounded-2xl bg-white/[0.04] border backdrop-blur-md shadow-lg transition-all duration-300 animate-fadeIn"
+              className={`w-full h-full max-w-[380px] sm:max-w-xl lg:max-w-2xl flex flex-col items-center justify-center text-center px-5 sm:px-7 sm:py-3 rounded-2xl bg-white/[0.04] border backdrop-blur-md shadow-lg transition-all duration-300 animate-fadeIn ${isCompactMobile ? 'py-1.5' : 'py-2'}`}
               style={{
                 borderColor: `${activeArchetype.cardColor}45`,
                 boxShadow: `0 4px 20px -4px ${activeArchetype.cardColor}25`,

@@ -38,7 +38,8 @@ function GlassMaterial() {
           displacementScale={70}
           blurAmount={0.025}
           saturation={140}
-          aberrationIntensity={2}
+          // Chromatic aberration tinted the rounded ends of buttons and bars.
+          aberrationIntensity={0}
           elasticity={0}
           cornerRadius={metrics.radius}
           globalMousePos={STATIC_POINTER}

@@ -385,21 +385,8 @@ export const ResultView: React.FC<ResultViewProps> = ({
 
     try {
       const asset = await getShareAsset('portrait');
-
-      if (isMobileDevice() && canShareFiles()) {
-        const result = await shareResult(asset, shareableUrl);
-        if (result === 'shared') {
-          showExportMessage('Image shared.');
-        } else if (result === 'failed') {
-          downloadAsset(asset);
-          showExportMessage('Portrait image saved.');
-        } else {
-          setExportMessage(null);
-        }
-      } else {
-        downloadAsset(asset);
-        showExportMessage('Portrait image saved.');
-      }
+      downloadAsset(asset);
+      showExportMessage('Portrait image saved.');
     } catch (error) {
       console.error(error);
       showExportMessage('Could not prepare the image. Please try again.');
