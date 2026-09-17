@@ -208,11 +208,11 @@ export const IntroView: React.FC<IntroViewProps> = ({
       </header>
 
       {/* Main Center Stage: 3D Cylindrical Carousel */}
-      <main className="my-auto flex flex-col items-center text-center justify-center grow py-1 sm:py-3 w-full max-w-6xl mx-auto">
+      <main className="my-auto flex flex-col items-center text-center justify-between sm:justify-center grow py-2 sm:py-3 w-full max-w-6xl mx-auto">
         {/* Headline with Elegant Tilted Stamp Label */}
         <div className="relative inline-flex flex-col items-center justify-center max-w-4xl mx-auto mb-2.5 sm:mb-6 lg:mb-10 px-2 shrink-0">
           {/* Mobile Eyebrow Stamp - bold, crisp, perfectly placed above headline */}
-          <GlassPanel className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_6px_20px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md mb-2 transform -rotate-[2deg] select-none">
+          <GlassPanel className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_6px_20px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md mb-2.5 transform -rotate-[2deg] select-none">
             <span className="w-2 h-2 rounded-full bg-[#FF2A54] shadow-[0_0_8px_#FF2A54] animate-pulse" />
             <span className="text-[11px] font-mono tracking-wider text-[#94A3B8] uppercase flex items-center gap-1">
               UNDER <span className="font-display font-black text-xs text-white tracking-tight">3 MINUTES</span>
@@ -220,11 +220,11 @@ export const IntroView: React.FC<IntroViewProps> = ({
           </GlassPanel>
 
           <div className="relative">
-            <h1 className="text-[30px] xs:text-[36px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-display font-black tracking-tight leading-[1.06] text-center">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#F3F4F6] to-white/90 block sm:inline">
+            <h1 className="text-[28px] xs:text-[34px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-display font-black tracking-tight leading-[1.22] sm:leading-[1.08] text-center">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#F3F4F6] to-white/90 block sm:inline pb-1">
                 What is your
               </span>{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2A54] via-[#FF637D] to-[#0066FF] drop-shadow-[0_0_35px_rgba(255,42,84,0.4)] block sm:inline">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2A54] via-[#FF637D] to-[#0066FF] drop-shadow-[0_0_35px_rgba(255,42,84,0.4)] block sm:inline pb-1">
                 political archetype?
               </span>
             </h1>

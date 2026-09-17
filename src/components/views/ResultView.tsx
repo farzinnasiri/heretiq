@@ -419,12 +419,12 @@ export const ResultView: React.FC<ResultViewProps> = ({
   const isForging = forgePhase !== 'settled';
 
   return (
-    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-start lg:justify-between px-2 pt-[max(0.6rem,env(safe-area-inset-top,12px))] pb-[max(1.5rem,env(safe-area-inset-bottom,20px))] sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
-      {/* Skip Forge Animation Button */}
+    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-between px-2 pt-[max(0.6rem,env(safe-area-inset-top,12px))] pb-[max(1.2rem,env(safe-area-inset-bottom,20px))] sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
+      {/* Skip Forge Animation Button - Bottom centered so it never collides with top header buttons */}
       {isForging && (
         <GlassButton
           onClick={handleSkipForge}
-          className="fixed top-3 sm:top-4 right-3 sm:right-5 z-50 px-3 py-1.5 rounded-full bg-black/80 hover:bg-black/95 border border-white/20 hover:border-white/40 text-[11px] font-mono text-white/80 hover:text-white backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow-2xl active:scale-95 group"
+          className="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-black/85 hover:bg-black border border-white/25 hover:border-white/40 text-xs font-mono text-white/90 hover:text-white backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.8)] active:scale-95 group"
           title="Skip reveal animation (or press Space / Esc)"
         >
           <span>Skip Forge</span>
