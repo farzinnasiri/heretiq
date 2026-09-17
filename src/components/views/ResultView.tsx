@@ -106,6 +106,42 @@ export const ResultView: React.FC<ResultViewProps> = ({
   // Side panel open state (desktop 2-column or mobile bottom sheet)
   const [isSidePanelOpen, setIsSidePanelOpen] = useState<boolean>(false);
 
+  // Drag-to-dismiss gesture state for mobile bottom sheet
+  const [dragOffsetY, setDragOffsetY] = useState<number>(0);
+  const touchStartYRef = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartYRef.current === null) return;
+    const deltaY = e.touches[0].clientY - touchStartYRef.current;
+    if (deltaY > 0) {
+      setDragOffsetY(deltaY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (dragOffsetY > 65) {
+      setIsSidePanelOpen(false);
+    }
+    setDragOffsetY(0);
+    touchStartYRef.current = null;
+  };
+
+  // Lock background scroll when mobile bottom sheet is open
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (isSidePanelOpen && window.innerWidth < 1024) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isSidePanelOpen]);
+
   // Export & sharing state
   const [copiedQuizLink, setCopiedQuizLink] = useState<boolean>(false);
   const [isExporting, setIsExporting] = useState<boolean>(false);
@@ -705,33 +741,45 @@ export const ResultView: React.FC<ResultViewProps> = ({
       {/* ========================================================================= */}
       <div
         onClick={() => setIsSidePanelOpen(false)}
-        className={`lg:hidden fixed inset-0 z-40 bg-black/68 backdrop-blur-[4px] transition-opacity duration-300 ${
+        className={`lg:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-[6px] transition-opacity duration-300 ease-out ${
           isSidePanelOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       />
 
       <GlassPanel
-        className={`glass-sheet lg:hidden fixed z-50 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] inset-x-0 bottom-0 max-h-[85vh] w-full rounded-t-3xl shadow-[0_-20px_60px_rgba(0,0,0,0.9)] ${
+        className={`glass-sheet lg:hidden fixed z-50 flex flex-col will-change-transform inset-x-0 bottom-0 max-h-[88dvh] w-full rounded-t-3xl shadow-[0_-20px_60px_rgba(0,0,0,0.9)] bg-[#080B14]/96 backdrop-blur-2xl border-t border-white/20 transition-transform ${
+          dragOffsetY > 0 ? 'duration-0' : 'duration-350 ease-[cubic-bezier(0.32,0.72,0,1)]'
+        } ${
           isSidePanelOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none'
         }`}
+        style={dragOffsetY > 0 ? { transform: `translateY(${dragOffsetY}px)` } : undefined}
       >
-        {/* Mobile Grab Handle & Close Bar (No title, no separator) */}
-        <div className="flex items-center justify-between px-4 pt-3 pb-2 shrink-0">
+        {/* Mobile Grab Handle Bar: True Centered Pill Handle & Absolute Close Button */}
+        <div
+          className="relative flex items-center justify-center pt-3 pb-2.5 px-4 shrink-0 cursor-grab active:cursor-grabbing select-none border-b border-white/[0.06]"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Centered Grab Handle Pill */}
           <div
-            className="w-12 h-1 rounded-full bg-white/20 mx-auto cursor-pointer"
+            className="w-12 h-1.5 rounded-full bg-white/30 hover:bg-white/50 active:bg-white/60 transition-colors cursor-pointer"
             onClick={() => setIsSidePanelOpen(false)}
+            aria-label="Drag down to close"
           />
+          {/* Absolute Right Close Button */}
           <GlassButton
+            type="button"
             onClick={() => setIsSidePanelOpen(false)}
-            className="p-1 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer ml-auto"
+            className="absolute right-4 top-2 w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/[0.14] border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             aria-label="Close"
           >
-            <X size={16} />
+            <X size={15} />
           </GlassButton>
         </div>
 
         {/* Scrollable Content inside Drawer for Mobile */}
-        <div className="overflow-y-auto px-4 py-3 no-scrollbar space-y-4">
+        <div className="overflow-y-auto px-4 py-3 no-scrollbar space-y-4 pb-[max(2.5rem,env(safe-area-inset-bottom,28px))]">
           {renderAllSections(isSidePanelOpen)}
         </div>
       </GlassPanel>
@@ -788,9 +836,9 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 </span>
               </div>
 
-              {/* 6 Dimension Sliders with Staggered Cascade */}
-              <div className="flex flex-col divide-y divide-white/[0.04]">
-                {DIMENSIONS.map((d, index) => {
+              {/* 6 Dimension Sliders */}
+              <div className="flex flex-col divide-y divide-white/[0.06]">
+                {DIMENSIONS.map((d) => {
                   const s = scores[d];
                   const meta = DIMENSION_META[d];
                   const count = coverage[d];
@@ -826,34 +874,37 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   return (
                     <div
                       key={d}
-                      className="py-3 sm:py-4.5 first:pt-1 last:pb-1 flex items-center gap-2.5 sm:gap-3.5"
-                      style={{
-                        opacity: isOpen ? 1 : 0,
-                        transform: isOpen ? 'translateX(0)' : 'translateX(15px)',
-                        transition: 'opacity 350ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-                        transitionDelay: isOpen ? `${70 + index * 30}ms` : '0ms',
-                      }}
+                      className="py-3 sm:py-3.5 first:pt-1 last:pb-1 flex flex-col gap-1.5"
                     >
-                      <div className="w-22 sm:w-28 text-right text-xs sm:text-[13px] font-semibold text-[#FF2A54]/90 truncate">
-                        {meta.score0End}
+                      {/* Top line: Dimension Name (left) & Score Leaning Badge (right) */}
+                      <div className="flex items-center justify-between text-[11px] font-mono">
+                        <span className="font-bold text-[#64748B] uppercase tracking-wider">
+                          {meta.name}
+                        </span>
+                        <span className={`text-[10px] sm:text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border shrink-0 ${badgeColor}`}>
+                          {badgeText}
+                        </span>
                       </div>
 
-                      <div className="grow relative h-2 sm:h-2.5 rounded-full spectrum-track border border-white/10">
-                        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 z-0" />
+                      {/* Spectrum Endpoints: Full text, ZERO truncation */}
+                      <div className="flex items-center justify-between text-xs sm:text-[13px] font-semibold gap-2">
+                        <span className={s !== null && s < 50 ? 'text-[#FF2A54] font-bold' : 'text-[#FF2A54]/80'}>
+                          {meta.score0End}
+                        </span>
+                        <span className={`text-right ${s !== null && s > 50 ? 'text-[#0066FF] font-bold' : 'text-[#0066FF]/80'}`}>
+                          {meta.score100End}
+                        </span>
+                      </div>
+
+                      {/* Full-width Precision Spectrum Track */}
+                      <div className="relative h-2.5 sm:h-3 w-full rounded-full spectrum-track border border-white/10 mt-0.5">
+                        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/35 -translate-x-1/2 z-0" />
                         {s !== null && (
                           <div
-                            className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full z-10 transition-all duration-300 ${dotColorClass}`}
+                            className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full z-10 transition-all duration-300 ${dotColorClass}`}
                             style={{ left: `calc(${s}% - 7px)` }}
                           />
                         )}
-                      </div>
-
-                      <div className="w-22 sm:w-28 text-left text-xs sm:text-[13px] font-semibold text-[#0066FF]/90 truncate">
-                        {meta.score100End}
-                      </div>
-
-                      <div className={`w-20 sm:w-24 text-center py-1 px-1.5 rounded-md text-[9.5px] sm:text-[10.5px] font-mono font-bold border shrink-0 ${badgeColor}`}>
-                        {badgeText}
                       </div>
                     </div>
                   );
