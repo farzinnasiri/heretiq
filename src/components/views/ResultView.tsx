@@ -650,7 +650,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsSidePanelOpen(prev => !prev)}
-                    aria-label={isSidePanelOpen ? 'Close Detailed Breakdown' : 'Detailed Spectrum Breakdown'}
+                    aria-label={isSidePanelOpen ? 'Close Deep Dive' : 'Deep Dive'}
                     className="relative w-full py-3 sm:py-3.5 px-4 sm:px-6 rounded-2xl flex items-center justify-center cursor-pointer select-none overflow-hidden transition-transform duration-120 ease-out border border-white/25 -translate-y-[4px] sm:-translate-y-[5px] group-hover:-translate-y-[6px] sm:group-hover:-translate-y-[7px] group-active:translate-y-0 shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
                     style={{
                       background: 'linear-gradient(135deg, #FF2A54 0%, #7928CA 50%, #0066FF 100%)',
@@ -676,7 +676,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                     {/* Centered Primary Label */}
                     <div className="flex min-w-0 items-center justify-center gap-2.5 z-10">
                       <span className="font-display font-black text-xs sm:text-sm md:text-[15px] uppercase tracking-wider text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
-                        {isSidePanelOpen ? 'Close Detailed Breakdown' : 'Detailed Spectrum Breakdown'}
+                        {isSidePanelOpen ? 'Close Deep Dive' : 'Deep Dive'}
                       </span>
                       {isSidePanelOpen ? (
                         <ChevronDown
