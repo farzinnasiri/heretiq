@@ -531,15 +531,14 @@ export const ResultView: React.FC<ResultViewProps> = ({
           className={`w-full flex flex-col lg:flex-row items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
               ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12 lg:items-start'
-              : 'w-full gap-0'
+              : 'max-w-[440px] sm:max-w-[460px] md:max-w-[480px] gap-0'
           }`}
         >
-          {/* Left Column: Hero Card & Actions Deck */}
+          {/* Left Column: Hero Card & Actions Deck - Smoothly moves left when Deep Dive expands */}
           <div
-            className={`w-full shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30 ${
+            className={`w-full max-w-[340px] sm:max-w-[360px] md:max-w-[370px] shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isSidePanelOpen ? 'lg:sticky lg:top-4' : ''
             }`}
-            style={{ maxWidth: 'min(340px, calc((100dvh - 240px) * 0.75))' }}
           >
             {/* Collectible Playing Card (Hero) */}
             <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
@@ -714,27 +713,31 @@ export const ResultView: React.FC<ResultViewProps> = ({
           {/* ========================================================================= */}
           {/* DESKTOP IN-CANVAS DEEP DIVE: Fluid Responsive Panel                       */}
           {/* ========================================================================= */}
-          {isSidePanelOpen && (
-            <div className="hidden lg:block z-10 overflow-hidden flex-1 min-w-0 max-w-[880px] xl:max-w-[940px] animate-fade-in">
-              {/* Right Panel Inner Wrapper - fluid and responsive, never overflows */}
-              <div className="w-full flex flex-col justify-between min-w-0">
-                {/* Desktop Close Button (No title, no separator) */}
-                <div className="flex justify-end shrink-0 mb-2">
-                  <GlassButton
-                    type="button"
-                    onClick={() => setIsSidePanelOpen(false)}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.14] border border-white/[0.10] hover:border-white/25 text-xs font-mono text-[#CBD5E1] hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
-                    title="Close Deep Dive"
-                  >
-                    <span>Close</span>
-                    <X size={14} />
-                  </GlassButton>
-                </div>
-
-                {renderAllSections(true)}
+          <div
+            className={`hidden lg:block z-10 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              isSidePanelOpen
+                ? 'flex-1 min-w-0 max-w-[880px] xl:max-w-[940px] max-h-[3000px] opacity-100 pointer-events-auto'
+                : 'max-w-0 max-h-0 opacity-0 pointer-events-none'
+            }`}
+          >
+            {/* Right Panel Inner Wrapper - fluid and responsive, never overflows */}
+            <div className="w-full flex flex-col justify-between min-w-0">
+              {/* Desktop Close Button (No title, no separator) */}
+              <div className="flex justify-end shrink-0 mb-2">
+                <GlassButton
+                  type="button"
+                  onClick={() => setIsSidePanelOpen(false)}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.14] border border-white/[0.10] hover:border-white/25 text-xs font-mono text-[#CBD5E1] hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                  title="Close Deep Dive"
+                >
+                  <span>Close</span>
+                  <X size={14} />
+                </GlassButton>
               </div>
+
+              {renderAllSections(isSidePanelOpen)}
             </div>
-          )}
+          </div>
         </div>
       </main>
 
@@ -753,8 +756,8 @@ export const ResultView: React.FC<ResultViewProps> = ({
           dragOffsetY > 0 ? 'duration-0' : 'duration-350 ease-[cubic-bezier(0.32,0.72,0,1)]'
         } ${
           isSidePanelOpen
-            ? 'translate-y-0 opacity-100 shadow-[0_-20px_60px_rgba(0,0,0,0.9)]'
-            : 'translate-y-full opacity-0 pointer-events-none shadow-none'
+            ? 'translate-y-0 opacity-100 shadow-[0_-20px_60px_rgba(0,0,0,0.9)] visible pointer-events-auto'
+            : 'translate-y-[calc(100%+80px)] opacity-0 shadow-none invisible pointer-events-none'
         }`}
         style={dragOffsetY > 0 ? { transform: `translateY(${dragOffsetY}px)` } : undefined}
       >
@@ -842,7 +845,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
 
               {/* 6 Dimension Sliders */}
               <div className="flex flex-col divide-y divide-white/[0.06]">
-                {DIMENSIONS.map((d) => {
+                {DIMENSIONS.map((d, index) => {
                   const s = scores[d];
                   const meta = DIMENSION_META[d];
                   const count = coverage[d];
@@ -879,6 +882,12 @@ export const ResultView: React.FC<ResultViewProps> = ({
                     <div
                       key={d}
                       className="py-3 sm:py-3.5 first:pt-1 last:pb-1 flex flex-col gap-1.5"
+                      style={{
+                        opacity: isOpen ? 1 : 0,
+                        transform: isOpen ? 'translateX(0)' : 'translateX(15px)',
+                        transition: 'opacity 350ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+                        transitionDelay: isOpen ? `${70 + index * 30}ms` : '0ms',
+                      }}
                     >
                       {/* Top line: Dimension Name (left) & Score Leaning Badge (right) */}
                       <div className="flex items-center justify-between text-[11px] font-mono">
