@@ -45,7 +45,7 @@ function GlassMaterial() {
           mouseOffset={STATIC_POINTER}
           mode="standard"
           padding="0"
-          style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%' }}
+          style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', height: '100%' }}
         >
           <span />
         </LiquidGlass>

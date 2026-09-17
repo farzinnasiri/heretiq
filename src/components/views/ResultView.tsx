@@ -419,17 +419,18 @@ export const ResultView: React.FC<ResultViewProps> = ({
   const isForging = forgePhase !== 'settled';
 
   return (
-    <div className="min-h-dvh w-full flex flex-col justify-between px-2 pt-[max(0.6rem,env(safe-area-inset-top,12px))] pb-[max(1.2rem,env(safe-area-inset-bottom,20px))] sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto">
+    <div className="min-h-dvh w-full flex flex-col items-center justify-start px-2 pt-[max(0.6rem,env(safe-area-inset-top,12px))] pb-[max(1.2rem,env(safe-area-inset-bottom,20px))] sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto">
       {/* Skip Forge Animation Button - Bottom centered so it never collides with top header buttons */}
       {isForging && (
-        <GlassButton
+        <button
+          type="button"
           onClick={handleSkipForge}
-          className="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-black/85 hover:bg-black border border-white/25 hover:border-white/40 text-xs font-mono text-white/90 hover:text-white backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.8)] active:scale-95 group"
+          className="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-black/90 hover:bg-black border border-white/25 hover:border-white/45 text-xs font-mono text-white/90 hover:text-white backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.85)] active:scale-95 group"
           title="Skip reveal animation (or press Space / Esc)"
         >
           <span>Skip Forge</span>
           <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
-        </GlassButton>
+        </button>
       )}
 
       {/* Shared Link Banner (if viewing someone else's result) */}
@@ -529,12 +530,14 @@ export const ResultView: React.FC<ResultViewProps> = ({
         <div
           className={`w-full flex flex-col lg:flex-row items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
-              ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12'
-              : 'max-w-[440px] sm:max-w-[460px] md:max-w-[480px] gap-0'
+              ? 'max-w-[1440px] xl:max-w-[1480px] gap-8 xl:gap-12 lg:items-start'
+              : 'max-w-[360px] sm:max-w-[370px] md:max-w-[380px] gap-0'
           }`}
         >
           {/* Left Column: Hero Card & Actions Deck */}
-          <div className="w-full max-w-[420px] sm:max-w-[440px] md:max-w-[460px] shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30">
+          <div className={`w-full max-w-[330px] sm:max-w-[350px] md:max-w-[360px] shrink-0 flex flex-col items-center justify-center gap-2 xs:gap-2.5 sm:gap-3 relative z-30 ${
+            isSidePanelOpen ? 'lg:sticky lg:top-4' : ''
+          }`}>
             {/* Collectible Playing Card (Hero) */}
             <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
               {/* Oracle Proclamation Intro Overlay: 2-Phase Cinematic Reveal */}
@@ -611,7 +614,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 onFlipChange={handleCardFlip}
                 isPopping={forgePhase === 'cutout_impact' || forgePhase === 'fill_front'}
                 forgePhase={forgePhase}
-                className="w-full max-w-[300px] xs:max-w-[320px] sm:max-w-[340px] md:max-w-[360px] lg:max-w-[350px] xl:max-w-[380px]"
+                className="w-full max-w-[290px] xs:max-w-[315px] sm:max-w-[330px] md:max-w-[340px] lg:max-w-[340px] xl:max-w-[350px]"
               />
             </div>
 
