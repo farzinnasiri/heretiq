@@ -64,7 +64,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   const progressFraction = Math.min(1, (itemIndex + 1) / totalCoreCount);
 
   return (
-    <div className="h-dvh max-h-dvh overflow-hidden flex flex-col justify-between px-4 pt-3 pb-2 sm:p-5 lg:px-8 lg:py-5 max-w-5xl mx-auto select-none">
+    <div className="min-h-dvh sm:h-dvh sm:max-h-dvh overflow-x-hidden overflow-y-auto sm:overflow-hidden flex flex-col justify-between px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom,16px))] sm:p-5 lg:px-8 lg:py-5 max-w-5xl mx-auto select-none">
       {/* Header & Neutral Progress Bar */}
       <header className="flex flex-col gap-2.5 sm:gap-3 shrink-0 pt-0.5 sm:pt-0">
         <div className="flex justify-between items-center">

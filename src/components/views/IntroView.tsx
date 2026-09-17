@@ -158,7 +158,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
   const activeArchetype = ARCHETYPES[activeIdx];
 
   return (
-    <div className="h-dvh max-h-dvh w-full flex flex-col justify-between px-4 py-3 sm:px-8 sm:py-5 lg:px-12 max-w-7xl mx-auto z-10 select-none overflow-hidden">
+    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-between px-3.5 py-2 sm:px-8 sm:py-5 lg:px-12 max-w-7xl mx-auto z-10 select-none overflow-x-hidden overflow-y-auto sm:overflow-hidden pb-[max(1.5rem,env(safe-area-inset-bottom,24px))] lg:pb-5">
       {/* Top Header */}
       <header className="relative flex justify-between items-center w-full shrink-0 pt-1 pb-2 sm:pb-3">
         {/* Left: 100% Private On-Device badge */}
@@ -210,9 +210,9 @@ export const IntroView: React.FC<IntroViewProps> = ({
       {/* Main Center Stage: 3D Cylindrical Carousel */}
       <main className="my-auto flex flex-col items-center text-center justify-center grow py-1 sm:py-3 w-full max-w-6xl mx-auto">
         {/* Headline with Elegant Tilted Stamp Label */}
-        <div className="relative inline-flex flex-col items-center justify-center max-w-4xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-2 shrink-0">
+        <div className="relative inline-flex flex-col items-center justify-center max-w-4xl mx-auto mb-2.5 sm:mb-6 lg:mb-10 px-2 shrink-0">
           {/* Mobile Eyebrow Stamp - bold, crisp, perfectly placed above headline */}
-          <GlassPanel className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_6px_20px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md mb-2.5 transform -rotate-[2deg] select-none">
+          <GlassPanel className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_6px_20px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md mb-2 transform -rotate-[2deg] select-none">
             <span className="w-2 h-2 rounded-full bg-[#FF2A54] shadow-[0_0_8px_#FF2A54] animate-pulse" />
             <span className="text-[11px] font-mono tracking-wider text-[#94A3B8] uppercase flex items-center gap-1">
               UNDER <span className="font-display font-black text-xs text-white tracking-tight">3 MINUTES</span>
@@ -220,7 +220,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
           </GlassPanel>
 
           <div className="relative">
-            <h1 className="text-[32px] xs:text-[38px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-display font-black tracking-tight leading-[1.06] text-center">
+            <h1 className="text-[30px] xs:text-[36px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-display font-black tracking-tight leading-[1.06] text-center">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#F3F4F6] to-white/90 block sm:inline">
                 What is your
               </span>{' '}
@@ -242,7 +242,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* 3D Round Carousel Stage - Generously sized for bold cards with ample clearance */}
-        <div className="relative w-full max-w-4xl lg:max-w-5xl h-[270px] sm:h-[315px] lg:h-[340px] flex items-center justify-center mb-3 sm:mb-5 lg:mb-6 shrink-0">
+        <div className="relative w-full max-w-4xl lg:max-w-5xl h-[240px] sm:h-[305px] lg:h-[340px] flex items-center justify-center mb-2 sm:mb-4 lg:mb-6 shrink-0">
           {/* Ambient Lighting Dome */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] sm:w-[660px] h-[260px] sm:h-[340px] rounded-full blur-[90px] pointer-events-none transition-colors duration-700 opacity-30"
@@ -453,11 +453,11 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* Dynamic Archetype Inspector Banner / Pill - Bigger on mobile, generous padding */}
-        <div className="min-h-[86px] sm:min-h-[96px] flex items-center justify-center mb-5 sm:mb-7 lg:mb-8 px-2 w-full shrink-0">
+        <div className="min-h-[80px] sm:min-h-[96px] flex items-center justify-center mb-2 sm:mb-5 lg:mb-6 px-2 w-full shrink-0">
           {activeArchetype ? (
             <div
               key={activeArchetype.id}
-              className="w-full h-full max-w-[380px] sm:max-w-xl lg:max-w-2xl flex flex-col items-center justify-center text-center px-5 py-2.5 sm:px-7 sm:py-3 rounded-2xl bg-white/[0.04] border backdrop-blur-md shadow-lg transition-all duration-300 animate-fadeIn"
+              className="w-full h-full max-w-[380px] sm:max-w-xl lg:max-w-2xl flex flex-col items-center justify-center text-center px-5 py-2 sm:px-7 sm:py-3 rounded-2xl bg-white/[0.04] border backdrop-blur-md shadow-lg transition-all duration-300 animate-fadeIn"
               style={{
                 borderColor: `${activeArchetype.cardColor}45`,
                 boxShadow: `0 4px 20px -4px ${activeArchetype.cardColor}25`,
@@ -497,7 +497,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* Primary CTA: 3D Sculpted Spacebar Keycap */}
-        <div className="flex flex-col items-center w-full max-w-[340px] sm:max-w-md mx-auto mb-3 sm:mb-5 shrink-0 relative group">
+        <div className="flex flex-col items-center w-full max-w-[340px] sm:max-w-md mx-auto mb-1.5 sm:mb-4 shrink-0 relative group">
           {/* Ambient Deep Radiant Under-Glow (Bilateral Crimson to Cobalt Aura) */}
           <div
             className="absolute inset-x-6 -bottom-2 h-16 rounded-2xl blur-2xl opacity-60 group-hover:opacity-90 group-active:opacity-40 transition-opacity duration-300 pointer-events-none"

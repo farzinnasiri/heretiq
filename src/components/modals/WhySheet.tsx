@@ -55,7 +55,7 @@ export const WhySheet: React.FC<WhySheetProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="why-title"
-        className="glass-sheet max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 rounded-2xl flex flex-col gap-6 shadow-2xl"
+        className="glass-sheet max-w-3xl w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col gap-6 shadow-2xl"
       >
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <div>

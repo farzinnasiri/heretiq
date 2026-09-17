@@ -345,7 +345,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
       {/* Radiant Shockwave Ring Layer on Impact (Option 1) */}
       {isImpactPunching && (
         <div
-          className="absolute pointer-events-none rounded-3xl border-2 z-10 animate-card-shockwave w-full max-w-[360px] xs:max-w-[400px] sm:max-w-[440px] md:max-w-[460px] aspect-[3/4]"
+          className="absolute pointer-events-none rounded-3xl border-2 z-10 animate-card-shockwave w-full max-w-[285px] xs:max-w-[310px] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4]"
           style={{
             borderColor: themeColor,
             boxShadow: `0 0 50px 10px ${themeColor}70, inset 0 0 30px ${themeColor}40`,
@@ -355,7 +355,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
 
       {/* Elastic Spring Punch Wrapper - completely isolates spring bounce from 3D card tilt */}
       <div
-        className={`w-full max-w-[360px] xs:max-w-[400px] sm:max-w-[440px] md:max-w-[460px] aspect-[3/4] flex justify-center items-center relative ${
+        className={`w-full max-w-[285px] xs:max-w-[310px] sm:max-w-[380px] md:max-w-[440px] aspect-[3/4] flex justify-center items-center relative ${
           isImpactPunching ? 'animate-card-impact-punch' : ''
         }`}
         style={{ transformStyle: 'preserve-3d' }}
@@ -635,7 +635,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           </div>
 
           {/* Center: The User's Encoded 6 Political Spectrums (High-Density Telemetry) */}
-          <div className="relative z-10 my-auto w-full flex flex-col gap-3 xs:gap-3.5 sm:gap-4 md:gap-4.5 px-1 py-1.5 sm:py-2">
+          <div className="relative z-10 my-auto w-full flex flex-col gap-2 xs:gap-2.5 sm:gap-3.5 md:gap-4.5 px-1 py-1 sm:py-2">
             {DIMENSIONS_CONFIG.map((cfg, idx) => {
               const score = getDimensionScore(cfg.id);
               return (

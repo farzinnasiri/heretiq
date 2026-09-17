@@ -62,7 +62,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       />
 
       <GlassPanel
-        className="relative w-full max-w-lg glass-sheet lg:rounded-3xl rounded-t-3xl overflow-hidden z-10 flex flex-col max-h-[90vh] animate-sheet-up"
+        className="relative w-full max-w-lg glass-sheet lg:rounded-3xl rounded-t-3xl overflow-hidden z-10 flex flex-col max-h-[90dvh] animate-sheet-up"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="lg:hidden flex items-center justify-center pt-3 pb-1">
@@ -88,7 +88,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           </GlassButton>
         </div>
 
-        <div className="p-5 flex flex-col gap-4 overflow-y-auto no-scrollbar">
+        <div className="p-5 pb-[max(1.5rem,env(safe-area-inset-bottom,20px))] flex flex-col gap-4 overflow-y-auto no-scrollbar">
           {/* Identity Snippet */}
           <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center gap-3">
             <div

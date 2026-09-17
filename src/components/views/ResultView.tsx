@@ -405,7 +405,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
   const isForging = forgePhase !== 'settled';
 
   return (
-    <div className="h-dvh max-h-dvh overflow-hidden flex flex-col justify-between p-2 sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative">
+    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-start lg:justify-between p-2 sm:p-3.5 lg:px-6 lg:py-2.5 max-w-[1520px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden pb-[max(1.75rem,env(safe-area-inset-bottom,24px))] lg:pb-2.5">
       {/* Skip Forge Animation Button */}
       {isForging && (
         <GlassButton
@@ -511,7 +511,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
       </div>
 
       {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion - z-30 sits strictly above header */}
-      <main className="relative z-30 grow flex flex-col justify-center items-center min-h-0 w-full overflow-visible my-auto py-2 sm:py-3 px-2 sm:px-4">
+      <main className="relative z-30 grow flex flex-col justify-start lg:justify-center items-center min-h-0 w-full overflow-visible py-1 sm:py-2 lg:my-auto px-2 sm:px-4">
         <div
           className={`w-full flex flex-col lg:flex-row items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
@@ -520,9 +520,9 @@ export const ResultView: React.FC<ResultViewProps> = ({
           }`}
         >
           {/* Left Column: Hero Card & Actions Deck - ALWAYS full size, moves to the left when Deep Dive is open */}
-          <div className="w-full max-w-[440px] sm:max-w-[460px] md:max-w-[480px] shrink-0 flex flex-col items-center justify-center gap-2.5 sm:gap-3.5 relative z-30">
+          <div className="w-full max-w-[440px] sm:max-w-[460px] md:max-w-[480px] shrink-0 flex flex-col items-center justify-center gap-2 sm:gap-3 relative z-30">
             {/* Collectible Playing Card (Hero) - z-40 ensures card is ALWAYS above buttons & header */}
-            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-2 sm:pb-3 min-h-[460px] sm:min-h-[500px] md:min-h-[540px]">
+            <div className="relative z-40 group filter drop-shadow-[0_0_35px_rgba(255,255,255,0.12)] w-full flex justify-center items-center pb-1 sm:pb-2">
               {/* Oracle Proclamation Intro Overlay: 2-Phase Cinematic Reveal */}
               {forgePhase === 'oracle_intro' && (
                 <div
@@ -597,7 +597,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 onFlipChange={handleCardFlip}
                 isPopping={forgePhase === 'cutout_impact' || forgePhase === 'fill_front'}
                 forgePhase={forgePhase}
-                className="max-w-[360px] xs:max-w-[400px] sm:max-w-[440px] md:max-w-[460px]"
+                className="max-w-[285px] xs:max-w-[310px] sm:max-w-[380px] md:max-w-[440px]"
               />
             </div>
 
@@ -607,7 +607,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 isForging ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
             >
-              {/* Primary Action Buttons: Share my result & Save image */}
+              {/* Row 1: Primary Action Buttons: Share my result & Save image */}
               <div className={`grid grid-cols-2 gap-2 sm:gap-2.5 relative ${
                 !isForging ? 'animate-deck-module-1' : 'opacity-0'
               }`}>
@@ -615,87 +615,87 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   type="button"
                   onClick={handleShareResult}
                   disabled={isExporting}
-                  className="relative overflow-hidden py-3 sm:py-3.5 px-3.5 sm:px-4 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
+                  className="relative overflow-hidden py-2.5 sm:py-3.5 px-3 sm:px-4 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
                 >
-                  <Share2 size={16} strokeWidth={2.5} />
-                  <span>Share my result</span>
+                  <Share2 size={15} strokeWidth={2.5} />
+                  <span className="truncate">Share result</span>
                 </GlassButton>
                 <GlassButton
                   type="button"
                   onClick={handleSaveImage}
                   disabled={isExporting}
-                  className="py-3 sm:py-3.5 px-3.5 sm:px-4 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                  className="py-2.5 sm:py-3.5 px-3 sm:px-4 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] uppercase tracking-wider rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
                 >
-                  <Download size={16} strokeWidth={2.5} />
-                  <span>Save image</span>
+                  <Download size={15} strokeWidth={2.5} />
+                  <span className="truncate">Save image</span>
                 </GlassButton>
               </div>
 
-              {/* Mobile Only: Share to Stories shortcut */}
-              <div className={`sm:hidden ${!isForging ? 'animate-deck-module-2' : 'opacity-0'}`}>
+              {/* Row 2: Secondary Utilities - Side-by-side on mobile to save vertical height, stacked on desktop */}
+              <div className={`grid grid-cols-2 sm:grid-cols-1 gap-2 sm:gap-2.5 ${!isForging ? 'animate-deck-module-2' : 'opacity-0'}`}>
+                {/* Mobile Only Stories Shortcut */}
                 <GlassButton
                   type="button"
                   onClick={handleShareStory}
                   disabled={isExporting}
-                  className="w-full py-2.5 px-3.5 liquid-glass-button text-xs font-bold text-white rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99] disabled:opacity-50"
+                  className="w-full sm:hidden py-2.5 px-3 liquid-glass-button text-[11px] font-bold text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99] disabled:opacity-50"
                 >
-                  <Smartphone size={14} className="text-[#94A3B8]" />
-                  <span>Share to Stories (9:16)</span>
+                  <Smartphone size={13} className="text-[#94A3B8] shrink-0" />
+                  <span className="truncate">Stories (9:16)</span>
                 </GlassButton>
-              </div>
 
-              {/* Tertiary Action: Invite a friend */}
-              <div className={!isForging ? 'animate-deck-module-2' : 'opacity-0'}>
+                {/* Invite a Friend */}
                 <GlassButton
                   type="button"
                   onClick={handleInviteFriend}
-                  className="w-full py-2.5 sm:py-3 px-4 liquid-glass-button text-xs sm:text-[12.5px] font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99]"
+                  className="w-full py-2.5 sm:py-3 px-3 sm:px-4 liquid-glass-button text-[11px] sm:text-[12.5px] font-mono text-[#CBD5E1] hover:text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99]"
                 >
                   {copiedQuizLink ? (
                     <>
-                      <Check size={14} className="text-emerald-400" />
-                      <span className="text-emerald-400 font-bold">Quiz link copied to clipboard!</span>
+                      <Check size={13} className="text-emerald-400 shrink-0" />
+                      <span className="text-emerald-400 font-bold truncate">Link Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Send size={13} className="text-[#0066FF]" />
-                      <span>Invite a friend to take the quiz</span>
+                      <Send size={12} className="text-[#0066FF] shrink-0" />
+                      <span className="truncate sm:hidden">Invite Friend</span>
+                      <span className="hidden sm:inline truncate">Invite a friend to take the quiz</span>
                     </>
                   )}
                 </GlassButton>
               </div>
 
               {exportMessage && (
-                <div className="text-xs font-mono text-white text-center py-1.5 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
-                  <Sparkles size={13} className="text-[#F59E0B] animate-spin" />
+                <div className="text-xs font-mono text-white text-center py-1 px-3 bg-white/[0.06] rounded-xl flex items-center justify-center gap-2">
+                  <Sparkles size={12} className="text-[#F59E0B] animate-spin" />
                   <span>{exportMessage}</span>
                 </div>
               )}
 
-              {/* Module 3: Trigger Button to Open/Close Deep Dive */}
+              {/* Row 3: Trigger Button to Open/Close Deep Dive - High visibility */}
               <div className={!isForging ? 'animate-deck-module-3' : 'opacity-0'}>
                 <GlassButton
                   type="button"
                   onClick={() => setIsSidePanelOpen(prev => !prev)}
-                  className="w-full py-3 sm:py-3.5 px-4 sm:px-5 rounded-2xl text-white font-mono text-xs sm:text-[13px] uppercase tracking-wider flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99]"
+                  className="w-full py-2.5 sm:py-3.5 px-3.5 sm:px-5 rounded-2xl text-white font-mono text-xs sm:text-[13px] uppercase tracking-wider flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.05] border border-white/15 hover:border-white/30"
                 >
-                  <div className="flex items-center gap-2">
-                    <Sparkles size={16} className="text-[#F59E0B] group-hover:rotate-12 transition-transform" />
-                    <span className="font-bold">
+                  <div className="flex items-center gap-2 truncate mr-2">
+                    <Sparkles size={15} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0" />
+                    <span className="font-bold text-[11.5px] sm:text-[13px] truncate">
                       {isSidePanelOpen ? 'Close Deep Dive' : 'Want to deep dive? See more'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-[#94A3B8]">
+                  <div className="flex items-center gap-1 text-xs text-[#94A3B8] shrink-0">
                     <span className="font-semibold text-white">{isSidePanelOpen ? 'Close' : 'Open'}</span>
                     {isSidePanelOpen ? (
                       <>
-                        <ChevronDown size={15} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white" />
-                        <ChevronLeft size={15} className="hidden lg:inline group-hover:-translate-x-0.5 transition-transform text-white" />
+                        <ChevronDown size={14} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white" />
+                        <ChevronLeft size={14} className="hidden lg:inline group-hover:-translate-x-0.5 transition-transform text-white" />
                       </>
                     ) : (
                       <>
-                        <ChevronUp size={15} className="lg:hidden group-hover:-translate-y-0.5 transition-transform text-white" />
-                        <ChevronRight size={15} className="hidden lg:inline group-hover:translate-x-0.5 transition-transform text-white" />
+                        <ChevronUp size={14} className="lg:hidden group-hover:-translate-y-0.5 transition-transform text-white" />
+                        <ChevronRight size={14} className="hidden lg:inline group-hover:translate-x-0.5 transition-transform text-white" />
                       </>
                     )}
                   </div>
