@@ -31,10 +31,8 @@ import {
   Share2,
   Download,
   Check,
-  ChevronUp,
   ChevronDown,
   ChevronRight,
-  ChevronLeft,
   Activity,
   Compass,
   RotateCcw,
@@ -44,6 +42,7 @@ import {
   HelpCircle,
   ShieldCheck,
   Send,
+  ArrowRight,
 } from 'lucide-react';
 
 // All deep-dive sections shown in a single continuous view (no tabs)
@@ -629,34 +628,72 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 isForging ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
             >
-              {/* Row 1: Trigger Button to Open/Close Deep Dive - High visibility */}
-              <div className={!isForging ? 'animate-deck-module-1' : 'opacity-0'}>
-                <GlassButton
-                  type="button"
-                  onClick={() => setIsSidePanelOpen(prev => !prev)}
-                  className="w-full py-2 sm:py-2.5 lg:py-3 px-3 sm:px-3.5 rounded-xl text-white font-sans text-xs sm:text-[13px] lg:text-sm font-semibold flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/30 transition-all"
+              {/* Row 1: 3D Sculpted Keycap - Trigger Button to Open/Close Deep Dive - High visibility */}
+              <div className={`w-full relative group mt-0.5 mb-1.5 sm:mb-2 ${!isForging ? 'animate-deck-module-1' : 'opacity-0'}`}>
+                {/* Ambient Deep Radiant Under-Glow (Bilateral Crimson to Cobalt Aura) */}
+                <div
+                  className="absolute inset-x-6 -bottom-1 h-12 rounded-2xl blur-xl opacity-60 group-hover:opacity-90 group-active:opacity-40 transition-opacity duration-300 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(255, 42, 84, 0.75) 0%, rgba(139, 92, 246, 0.75) 50%, rgba(0, 102, 255, 0.75) 100%)',
+                  }}
+                />
+
+                {/* 3D Extruded Chassis Base (Anchored bottom layer) */}
+                <div
+                  className="relative w-full rounded-2xl transition-all duration-150 ease-out"
+                  style={{
+                    background: 'linear-gradient(90deg, #5B081E 0%, #2A0547 50%, #082154 100%)',
+                    boxShadow: '0 10px 24px -4px rgba(0, 0, 0, 0.85), 0 0 35px -8px rgba(124, 58, 237, 0.4)',
+                  }}
                 >
-                  <div className="flex items-center gap-1.5 min-w-0 text-left mr-2">
-                    <Sparkles size={13} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0" />
-                    <span>
-                      {isSidePanelOpen ? 'Close Detailed Breakdown' : 'Detailed Spectrum Breakdown'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 text-[11px] text-[#94A3B8] shrink-0 font-mono">
-                    <span className="font-semibold text-white">{isSidePanelOpen ? 'Close' : 'View'}</span>
-                    {isSidePanelOpen ? (
-                      <>
-                        <ChevronDown size={13} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white" />
-                        <ChevronLeft size={13} className="hidden lg:inline group-hover:-translate-x-0.5 transition-transform text-white" />
-                      </>
-                    ) : (
-                      <>
-                        <ChevronUp size={13} className="lg:hidden group-hover:translate-y-0.5 transition-transform text-white" />
-                        <ChevronRight size={13} className="hidden lg:inline group-hover:translate-x-0.5 transition-transform text-white" />
-                      </>
-                    )}
-                  </div>
-                </GlassButton>
+                  {/* The Moving 3D Keycap (Pushes down mechanically into the base) */}
+                  <button
+                    type="button"
+                    onClick={() => setIsSidePanelOpen(prev => !prev)}
+                    aria-label={isSidePanelOpen ? 'Close Detailed Breakdown' : 'Detailed Spectrum Breakdown'}
+                    className="relative w-full py-3 sm:py-3.5 px-4 sm:px-6 rounded-2xl flex items-center justify-center cursor-pointer select-none overflow-hidden transition-transform duration-120 ease-out border border-white/25 -translate-y-[4px] sm:-translate-y-[5px] group-hover:-translate-y-[6px] sm:group-hover:-translate-y-[7px] group-active:translate-y-0 shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+                    style={{
+                      background: 'linear-gradient(135deg, #FF2A54 0%, #7928CA 50%, #0066FF 100%)',
+                      // Size the gradient through the border so the opposite edge cannot repeat underneath it.
+                      backgroundOrigin: 'border-box',
+                      backgroundRepeat: 'no-repeat',
+                    }}
+                  >
+                    {/* Cylindrical Keycap Top Convex Highlight */}
+                    <div
+                      className="absolute inset-0 pointer-events-none rounded-2xl opacity-40 mix-blend-overlay"
+                      style={{
+                        background: 'radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%)',
+                      }}
+                    />
+
+                    {/* Specular Top Lip Bevel */}
+                    <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-white/30 via-white/80 to-white/30 pointer-events-none" />
+
+                    {/* Specular Holographic Sheen Sweep on Hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+
+                    {/* Centered Primary Label */}
+                    <div className="flex min-w-0 items-center justify-center gap-2.5 z-10">
+                      <span className="font-display font-black text-xs sm:text-sm md:text-[15px] uppercase tracking-wider text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+                        {isSidePanelOpen ? 'Close Detailed Breakdown' : 'Detailed Spectrum Breakdown'}
+                      </span>
+                      {isSidePanelOpen ? (
+                        <ChevronDown
+                          size={18}
+                          strokeWidth={2.5}
+                          className="shrink-0 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] transition-transform duration-200"
+                        />
+                      ) : (
+                        <ArrowRight
+                          size={18}
+                          strokeWidth={2.5}
+                          className="shrink-0 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] transition-transform duration-200 group-hover:translate-x-1.5"
+                        />
+                      )}
+                    </div>
+                  </button>
+                </div>
               </div>
 
               {/* Row 2: Primary Action Buttons: Share my result & Save image */}
