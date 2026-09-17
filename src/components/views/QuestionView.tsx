@@ -86,10 +86,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   const questionDirection = isQuestionLanguageRtl(questionLanguage) ? 'rtl' : 'ltr';
 
   return (
-    <div className="min-h-dvh sm:h-dvh sm:max-h-dvh overflow-x-hidden overflow-y-auto sm:overflow-hidden flex flex-col justify-between px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom,16px))] sm:p-5 lg:px-8 lg:py-5 max-w-5xl mx-auto select-none">
+    <div className="page-screen min-h-dvh flex flex-col max-w-5xl mx-auto select-none">
       {/* Header & Neutral Progress Bar */}
       <header className="flex flex-col gap-2.5 sm:gap-3 shrink-0 pt-0.5 sm:pt-0">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center gap-3">
           {/* Left: Desktop Back button + HERETIQ brand / Mobile HERETIQ brand only */}
           <div className="flex items-center gap-3">
             <GlassButton
@@ -112,7 +112,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           </div>
 
           {/* Right: Question language and counter */}
-          <div className="flex items-center gap-3 text-xs font-mono">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono ml-auto">
             <label className="sr-only" htmlFor="question-language">
               Question language
             </label>
@@ -153,13 +153,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         </div>
       </header>
 
-      {/* Main Question Arena:
-          - Mobile (< sm): Question at eye level (flex-1 my-auto), Buttons down in bottom thumb zone (shrink-0)
-          - Desktop (>= sm): Question + Buttons clustered closely together at eye-line level (sm:justify-center, sm:gap-7, sm:my-0)
-      */}
-      <main className="flex-1 flex flex-col justify-between sm:justify-center sm:gap-7 md:gap-8 items-center max-w-3xl mx-auto w-full min-h-0 py-3 sm:py-0 sm:-translate-y-4">
+      {/* Text can grow in any language; the page scrolls when the viewport is short. */}
+      <main className="grow shrink-0 flex flex-col justify-between sm:justify-center gap-6 sm:gap-7 md:gap-8 items-center max-w-3xl mx-auto w-full py-[clamp(1.5rem,5svh,3.5rem)]">
         {/* Eye-Level Question Prompt (upper-middle on mobile, tight to buttons on desktop) */}
-        <div className="flex-1 sm:flex-none sm:h-[132px] md:h-[144px] lg:h-[152px] flex items-center justify-center sm:items-start w-full px-2 sm:px-4 text-center my-auto sm:my-0 min-h-0">
+        <div className="grow sm:grow-0 flex items-center justify-center w-full px-2 sm:px-4 text-center py-3 sm:py-0">
           <h2
             ref={promptHeadingRef}
             tabIndex={-1}
@@ -186,7 +183,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   aria-pressed={isSelected}
                   onClick={() => handleSelect(choiceKey)}
                   disabled={isTransitioning}
-                  className={`choice-card group relative p-4.5 xs:p-5 sm:p-5 md:p-6 min-h-[84px] xs:min-h-[96px] sm:min-h-0 sm:h-[150px] md:h-[165px] text-left rounded-2xl flex flex-col justify-between select-none cursor-pointer transition-all active:scale-[0.98] ${
+                  className={`choice-card group relative p-4.5 xs:p-5 sm:p-5 md:p-6 min-h-[96px] sm:min-h-[150px] md:min-h-[165px] text-left rounded-2xl flex flex-col justify-between select-none cursor-pointer transition-all active:scale-[0.98] ${
                     isSelected ? 'selected' : ''
                   }`}
                 >

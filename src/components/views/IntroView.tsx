@@ -9,6 +9,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { ARCHETYPES } from '../../domain/archetypes';
+import { getIntroCarouselLayout } from './introCarouselLayout';
 
 interface IntroViewProps {
   onStart: () => void;
@@ -55,14 +56,15 @@ export const IntroView: React.FC<IntroViewProps> = ({
   const count = ARCHETYPES.length; // 12
   const stepAngle = 360 / count; // 30 deg
 
-  const isMobile = windowWidth < 640;
-  const isTablet = windowWidth >= 640 && windowWidth < 1024;
-  const isCompactMobile = isMobile && windowHeight < 700;
-
-  // 3D Carousel Cylinder Dimensions - calibrated for bold presence with generous spacing
-  const radius = isCompactMobile ? 245 : isMobile ? 275 : isTablet ? 320 : 355; // px
-  const cardW = isCompactMobile ? 126 : isMobile ? 142 : isTablet ? 154 : 166; // px
-  const cardH = isCompactMobile ? 178 : isMobile ? 200 : isTablet ? 218 : 234; // px
+  const {
+    cardWidth: cardW,
+    cardHeight: cardH,
+    radius,
+    perspective,
+    frontLift,
+    frontScale,
+    stageHeight,
+  } = getIntroCarouselLayout(windowWidth, windowHeight);
 
   // Rotate smoothly to a specific archetype by shortest path
   const rotateTo = (targetIdx: number) => {
@@ -170,22 +172,22 @@ export const IntroView: React.FC<IntroViewProps> = ({
   const activeArchetype = ARCHETYPES[activeIdx];
 
   return (
-    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col justify-between px-3.5 py-2 sm:px-8 sm:py-5 lg:px-12 max-w-7xl mx-auto z-10 select-none overflow-x-hidden overflow-y-auto sm:overflow-hidden pb-[max(1.5rem,env(safe-area-inset-bottom,24px))] lg:pb-5">
+    <div className="page-screen min-h-dvh w-full flex flex-col max-w-7xl mx-auto z-10 select-none">
       {/* Top Header */}
-      <header className="relative flex justify-between items-center w-full shrink-0 pt-1 pb-2 sm:pb-3">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-2 items-center w-full shrink-0 pt-1 pb-2 sm:pb-3">
         {/* Left: 100% Private On-Device badge */}
-        <GlassPanel className="flex items-center gap-1.5 px-2 min-[360px]:px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-sm">
+        <GlassPanel className="justify-self-start flex items-center gap-1.5 px-2 min-[400px]:px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-sm">
           <ShieldCheck size={14} className="text-[#10B981]" />
-          <span className="text-[11px] font-mono text-[#94A3B8] font-medium hidden sm:inline">
+          <span className="text-[11px] font-mono text-[#94A3B8] font-medium hidden lg:inline">
             100% private. Zero data stored.
           </span>
-          <span className="text-[11px] font-mono text-[#94A3B8] font-medium max-[359px]:hidden sm:hidden">
-            100% Private
+          <span className="text-[11px] font-mono text-[#94A3B8] font-medium lg:hidden">
+            <span className="hidden min-[400px]:inline">100% </span>Private
           </span>
         </GlassPanel>
 
         {/* Center: Signature HERETIQ Brand Logo (HERETIQ above dual dots) */}
-        <GlassPanel className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)] select-none" aria-label="HERETIQ">
+        <GlassPanel className="flex flex-col items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)] select-none" aria-label="HERETIQ">
           <span className="font-heading text-xs sm:text-[13px] font-black tracking-widest text-white uppercase leading-none">
             HERETIQ
           </span>
@@ -199,7 +201,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </GlassPanel>
 
         {/* Right: Clean Utility Icons */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="justify-self-end flex items-center gap-1.5 sm:gap-2">
           <GlassButton
             onClick={onOpenHowItWorks}
             title="How it works & Methodology"
@@ -220,13 +222,13 @@ export const IntroView: React.FC<IntroViewProps> = ({
       </header>
 
       {/* Main Center Stage: 3D Cylindrical Carousel */}
-      <main className={`my-auto flex flex-col items-center text-center justify-start sm:justify-center grow sm:py-3 w-full max-w-6xl mx-auto ${isCompactMobile ? 'py-0' : 'py-2'}`}>
+      <main className="intro-main flex flex-col items-center text-center justify-center grow w-full max-w-6xl mx-auto">
         {/* Headline with Elegant Tilted Stamp Label */}
-        <div className={`relative z-30 inline-flex flex-col items-center justify-center max-w-4xl mx-auto sm:mb-6 lg:mb-10 px-2 shrink-0 ${isCompactMobile ? 'mb-2' : 'mb-6'}`}>
-          {/* Mobile time cue sits beside the headline so it does not consume a row above it. */}
+        <div className="relative z-30 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-2 shrink-0">
+          {/* Keep the time cue in the heading flow so narrow screens cannot clip it. */}
           <GlassPanel
             aria-label="Under 3 minutes"
-            className={`${isCompactMobile ? 'hidden' : 'flex'} sm:hidden absolute -left-10 top-1/2 -translate-y-1/2 w-12 h-12 flex-col items-center justify-center gap-0 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_6px_20px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md select-none`}
+            className="order-last mt-2 inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0C1018]/95 border border-[#FF2A54]/30 select-none"
           >
             <span className="w-2 h-2 rounded-full bg-[#FF2A54] shadow-[0_0_8px_#FF2A54] animate-pulse" />
             <span className="text-[8px] font-mono tracking-[0.08em] text-[#94A3B8] uppercase leading-tight">UNDER</span>
@@ -234,7 +236,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
           </GlassPanel>
 
           <div className="relative">
-            <h1 className="text-[28px] xs:text-[34px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-display font-black tracking-tight leading-[1.22] sm:leading-[1.08] text-center">
+            <h1 className="intro-title font-display font-black tracking-tight leading-[1.18] text-center">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#F3F4F6] to-white/90 block sm:inline pb-1">
                 What is your
               </span>{' '}
@@ -243,20 +245,14 @@ export const IntroView: React.FC<IntroViewProps> = ({
               </span>
             </h1>
 
-            {/* Desktop Corner Tilted Stamp */}
-            <div className="hidden sm:inline-flex absolute -top-6 -right-6 lg:-right-12 transform rotate-[6deg] hover:rotate-0 transition-transform duration-300 pointer-events-none select-none">
-              <GlassPanel className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0C1018]/95 border border-dashed border-[#FF2A54]/60 shadow-[0_8px_25px_-5px_rgba(255,42,84,0.35)] backdrop-blur-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A54] shadow-[0_0_8px_#FF2A54] animate-pulse" />
-                <span className="text-[11px] font-mono tracking-wider text-[#94A3B8] uppercase flex items-center gap-1">
-                  UNDER <span className="font-display font-black text-sm text-white tracking-tight">3 MINUTES</span>
-                </span>
-              </GlassPanel>
-            </div>
           </div>
         </div>
 
-        {/* 3D Round Carousel Stage - Generously sized for bold cards with ample clearance */}
-        <div className={`relative z-10 w-full max-w-4xl lg:max-w-5xl sm:h-[305px] lg:h-[340px] flex items-center justify-center sm:mb-4 lg:mb-6 shrink-0 ${isCompactMobile ? 'h-[200px] mb-0' : 'h-[240px] mb-2'}`}>
+        {/* The stage reserves the full visible card height before the navigation row. */}
+        <div
+          className="relative z-10 w-full max-w-4xl lg:max-w-5xl flex items-center justify-center shrink-0"
+          style={{ height: stageHeight }}
+        >
           {/* Ambient Lighting Dome */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] sm:w-[660px] h-[260px] sm:h-[340px] rounded-full blur-[90px] pointer-events-none transition-colors duration-700 opacity-30"
@@ -299,7 +295,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
 
           {/* 3D Perspective Viewport */}
           <div
-            style={{ perspective: `${isMobile ? 1050 : 1200}px` }}
+            style={{ perspective: `${perspective}px` }}
             className="relative w-full h-full flex items-center justify-center select-none"
             onMouseEnter={() => {
               isHoveredRef.current = true;
@@ -340,8 +336,8 @@ export const IntroView: React.FC<IntroViewProps> = ({
                   ? 1.05
                   : Math.max(0.52, 1 - (angleFromFront / 90) * 0.48);
 
-                const extraZ = isFront ? (isMobile ? 8 : 24) : 0;
-                const cardScale = isFront ? (isMobile ? 'scale(1.04)' : 'scale(1.08)') : 'scale(1)';
+                const extraZ = isFront ? frontLift : 0;
+                const cardScale = `scale(${isFront ? frontScale : 1})`;
 
                 return (
                   <div
@@ -409,7 +405,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
                       <span className="text-[13px] sm:text-[15px] font-display font-black tracking-wider text-white uppercase drop-shadow-md leading-none">
                         {arch.personaName || arch.title.replace(/^The /, '')}
                       </span>
-                      <span className="text-[9.5px] sm:text-[11px] font-display text-[#94A3B8] font-semibold tracking-tight text-center max-w-full leading-tight mt-1 whitespace-nowrap">
+                      <span className="text-[9.5px] sm:text-[11px] font-display text-[#94A3B8] font-semibold tracking-tight text-center max-w-full leading-tight mt-1">
                         {arch.title.replace(/^The /, '')}
                       </span>
                     </div>
@@ -421,7 +417,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* 12 Archetypes Navigator with Integrated Mobile Thumb Chevrons */}
-        <div className={`flex items-center justify-center gap-3.5 sm:gap-2.5 sm:my-4 lg:my-5 shrink-0 ${isCompactMobile ? 'my-1' : 'my-3'}`}>
+        <div className="flex items-center justify-center gap-3 sm:gap-2.5 w-full shrink-0">
           {/* Mobile Thumb Prev Button - Enlarger for easier tapping */}
           <GlassButton
             type="button"
@@ -436,7 +432,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
           </GlassButton>
 
           {/* 12 Dots */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-center flex-wrap gap-1.5 sm:gap-2 min-w-0">
             {ARCHETYPES.map((arch, i) => (
               <button
                 key={arch.id}
@@ -470,11 +466,11 @@ export const IntroView: React.FC<IntroViewProps> = ({
         </div>
 
         {/* Dynamic Archetype Inspector Banner / Pill - Bigger on mobile, generous padding */}
-        <div className={`sm:min-h-[96px] flex items-center justify-center sm:mb-5 lg:mb-6 px-2 w-full shrink-0 ${isCompactMobile ? 'min-h-[66px] mb-2' : 'min-h-[80px] mb-5'}`}>
+        <div className="flex items-center justify-center px-2 w-full shrink-0">
           {activeArchetype ? (
             <div
               key={activeArchetype.id}
-              className={`w-full h-full max-w-[380px] sm:max-w-xl lg:max-w-2xl flex flex-col items-center justify-center text-center px-5 sm:px-7 sm:py-3 rounded-2xl bg-white/[0.04] border backdrop-blur-md shadow-lg transition-all duration-300 animate-fadeIn ${isCompactMobile ? 'py-1.5' : 'py-2'}`}
+              className="w-full max-w-[380px] sm:max-w-xl lg:max-w-2xl flex flex-col items-center justify-center text-center px-4 py-2.5 sm:px-7 sm:py-3 rounded-2xl bg-white/[0.04] border backdrop-blur-md shadow-lg transition-all duration-300 animate-fadeIn"
               style={{
                 borderColor: `${activeArchetype.cardColor}45`,
                 boxShadow: `0 4px 20px -4px ${activeArchetype.cardColor}25`,
@@ -536,7 +532,7 @@ export const IntroView: React.FC<IntroViewProps> = ({
               type="button"
               onClick={onStart}
               aria-label="Discover your Archetype"
-              className={`relative w-full py-4 sm:py-4.5 px-6 sm:px-8 rounded-2xl flex items-center justify-center cursor-pointer select-none overflow-hidden transition-transform duration-120 ease-out border border-white/25 ${
+              className={`relative w-full py-4 sm:py-4.5 px-4 sm:px-6 rounded-2xl flex flex-wrap gap-x-3 gap-y-2 items-center justify-center cursor-pointer select-none overflow-hidden transition-transform duration-120 ease-out border border-white/25 ${
                 isSpacePressed
                   ? 'translate-y-0 shadow-none'
                   : '-translate-y-[5px] group-hover:-translate-y-[7px] group-active:translate-y-0 shadow-[0_2px_4px_rgba(0,0,0,0.3)]'
@@ -563,19 +559,19 @@ export const IntroView: React.FC<IntroViewProps> = ({
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
 
               {/* Centered Primary Label */}
-              <div className="flex items-center justify-center gap-2.5 z-10">
+              <div className="flex min-w-0 items-center justify-center gap-2.5 z-10">
                 <span className="font-display font-black text-xs sm:text-sm md:text-[15px] uppercase tracking-wider text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
                   Discover your Archetype
                 </span>
                 <ArrowRight
                   size={18}
                   strokeWidth={2.5}
-                  className="text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] transition-transform duration-200 group-hover:translate-x-1.5"
+                  className="shrink-0 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] transition-transform duration-200 group-hover:translate-x-1.5"
                 />
               </div>
 
-              {/* Desktop Spacebar Indicator Badge (Docked cleanly on the right, does not displace center text) */}
-              <div className="hidden sm:flex items-center gap-1.5 absolute right-4 text-[10px] font-mono font-bold text-white/85 bg-black/30 px-2.5 py-1 rounded-lg border border-white/20 backdrop-blur-sm shadow-inner z-10 tracking-wider">
+              {/* Let the keyboard hint wrap instead of overlapping the label. */}
+              <div className="hidden sm:flex shrink-0 items-center gap-1.5 text-[10px] font-mono font-bold text-white/85 bg-black/30 px-2.5 py-1 rounded-lg border border-white/20 backdrop-blur-sm shadow-inner z-10 tracking-wider">
                 <span className="text-[12px] leading-none">␣</span>
                 <span>SPACE</span>
               </div>

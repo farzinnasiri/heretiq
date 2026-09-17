@@ -27,7 +27,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-dvh bg-[#05060A] text-[#F3F4F6] relative isolate selection:bg-[#FF2A54]/30 selection:text-white overflow-x-hidden">
+    <div className="min-h-dvh bg-[#05060A] text-[#F3F4F6] relative isolate selection:bg-[#FF2A54]/30 selection:text-white overflow-x-clip">
       {/* Living Celestial Constellation Background */}
       <ConstellationBackground />
 

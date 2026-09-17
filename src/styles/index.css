@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --breakpoint-lg: 900px;
+  --breakpoint-xs: 23.4375rem;
+  /* Keep the default lg breakpoint at 64rem, matching the result drawer logic. */
 }
 
 @layer base {
@@ -34,16 +35,8 @@
     padding: 0;
     min-height: 100dvh;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100vw;
-  }
-
-  @media (min-width: 900px) {
-    html, body, #root {
-      height: 100dvh;
-      max-height: 100dvh;
-      overflow: hidden;
-    }
   }
 
   h1, h2, h3, .font-heading {
@@ -56,6 +49,31 @@
 
   code, pre, .font-mono {
     font-family: var(--font-mono);
+  }
+}
+
+/* Content owns page height. Short viewports and larger text can scroll instead
+   of being clipped by a fixed desktop canvas. */
+.page-screen {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  padding-left: max(clamp(0.875rem, 3vw, 3rem), env(safe-area-inset-left));
+  padding-right: max(clamp(0.875rem, 3vw, 3rem), env(safe-area-inset-right));
+}
+
+.intro-main {
+  gap: clamp(0.5rem, 1.4svh, 1rem);
+  padding-block: clamp(0.75rem, 2svh, 1.5rem);
+}
+
+.intro-title {
+  font-size: clamp(1.5rem, 7.2vw, 2.25rem);
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 40rem) {
+  .intro-title {
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
   }
 }
 

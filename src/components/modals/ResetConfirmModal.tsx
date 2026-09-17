@@ -35,7 +35,7 @@ export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({
 
       {/* Modal Container */}
       <GlassPanel
-        className="relative w-full max-w-md glass-sheet rounded-3xl p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] overflow-hidden z-10 flex flex-col gap-5 transition-all duration-300 animate-sheet-up text-center"
+        className="relative w-full max-w-md max-h-[calc(100dvh-2rem)] glass-sheet rounded-3xl p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] overflow-y-auto z-10 flex flex-col gap-5 transition-all duration-300 animate-sheet-up text-center"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}

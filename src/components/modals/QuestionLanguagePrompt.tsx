@@ -40,7 +40,7 @@ export const QuestionLanguagePrompt: React.FC<QuestionLanguagePromptProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="question-language-title"
-        className="glass-sheet max-w-md w-full p-5 sm:p-6 rounded-2xl flex flex-col gap-5 shadow-2xl"
+        className="glass-sheet max-w-md w-full max-h-[calc(100dvh-2rem)] overflow-y-auto p-5 sm:p-6 rounded-2xl flex flex-col gap-5 shadow-2xl"
       >
         <div className="flex items-start gap-3">
           <Languages size={21} className="text-white mt-0.5 shrink-0" aria-hidden="true" />
@@ -75,7 +75,7 @@ export const QuestionLanguagePrompt: React.FC<QuestionLanguagePromptProps> = ({
           />
         </div>
 
-        <div className="flex items-center justify-end gap-2 pt-1 border-t border-white/10">
+        <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-white/10">
           <GlassButton
             type="button"
             onClick={onCancel}

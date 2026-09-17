@@ -106,11 +106,11 @@ export const ResultView: React.FC<ResultViewProps> = ({
   // Side panel open state (desktop 2-column or mobile bottom sheet)
   const [isSidePanelOpen, setIsSidePanelOpen] = useState<boolean>(false);
   const [isDesktopViewport, setIsDesktopViewport] = useState<boolean>(() =>
-    typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 64rem)').matches
   );
 
   useEffect(() => {
-    const query = window.matchMedia('(min-width: 1024px)');
+    const query = window.matchMedia('(min-width: 64rem)');
     const handleChange = (event: MediaQueryListEvent) => setIsDesktopViewport(event.matches);
     setIsDesktopViewport(query.matches);
     query.addEventListener('change', handleChange);
@@ -144,14 +144,14 @@ export const ResultView: React.FC<ResultViewProps> = ({
   // Lock background scroll when mobile bottom sheet is open
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    if (isSidePanelOpen && window.innerWidth < 1024) {
+    if (isSidePanelOpen && !isDesktopViewport) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
         document.body.style.overflow = originalOverflow;
       };
     }
-  }, [isSidePanelOpen]);
+  }, [isSidePanelOpen, isDesktopViewport]);
 
   // Export & sharing state
   const [copiedQuizLink, setCopiedQuizLink] = useState<boolean>(false);
@@ -420,7 +420,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
   const isForging = forgePhase !== 'settled';
 
   return (
-    <div className="min-h-dvh lg:h-dvh lg:max-h-dvh w-full flex flex-col items-center justify-center px-2 pt-[max(0.6rem,env(safe-area-inset-top,10px))] pb-[max(1rem,env(safe-area-inset-bottom,16px))] sm:p-3 lg:px-5 lg:py-3 max-w-[1720px] mx-auto select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
+    <div className="page-screen min-h-dvh w-full flex flex-col items-center max-w-[1720px] mx-auto select-none relative">
       {/* Skip Forge Animation Button - Bottom centered so it never collides with top header buttons */}
       {isForging && (
         <button
@@ -527,7 +527,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
       </div>
 
       {/* Main Workspace: Hero Card & Actions Deck / Desktop 2-Column Expansion */}
-      <main className="relative z-30 flex-1 flex flex-col items-center justify-center min-h-0 w-full overflow-visible px-2 sm:px-4">
+      <main className="relative z-30 grow shrink-0 flex flex-col items-center justify-center w-full overflow-visible pt-[clamp(2rem,6vw,3rem)] pb-3">
         <div
           className={`w-full flex flex-col lg:flex-row items-center justify-center transition-[max-width,gap] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isSidePanelOpen
@@ -640,7 +640,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   className="relative overflow-hidden py-2 sm:py-2.5 lg:py-3 px-2.5 sm:px-3.5 bg-white text-[#05060A] font-extrabold text-xs sm:text-[13px] lg:text-sm uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 hover:bg-[#F3F4F6] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(255,255,255,0.22)] cursor-pointer group disabled:opacity-50"
                 >
                   <Share2 size={13} strokeWidth={2.5} />
-                  <span className="truncate">Share result</span>
+                  <span>Share result</span>
                 </GlassButton>
                 <GlassButton
                   type="button"
@@ -649,7 +649,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   className="py-2 sm:py-2.5 lg:py-3 px-2.5 sm:px-3.5 liquid-glass-button text-white font-extrabold text-xs sm:text-[13px] lg:text-sm uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shadow-lg disabled:opacity-50"
                 >
                   <Download size={13} strokeWidth={2.5} />
-                  <span className="truncate">Save image</span>
+                  <span>Save image</span>
                 </GlassButton>
               </div>
 
@@ -668,7 +668,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   ) : (
                     <>
                       <Send size={11} className="text-[#0066FF] shrink-0" />
-                      <span className="truncate">Invite a friend to take the quiz</span>
+                      <span>Invite a friend to take the quiz</span>
                     </>
                   )}
                 </GlassButton>
@@ -688,9 +688,9 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   onClick={() => setIsSidePanelOpen(prev => !prev)}
                   className="w-full py-2 sm:py-2.5 lg:py-3 px-3 sm:px-3.5 rounded-xl text-white font-sans text-xs sm:text-[13px] lg:text-sm font-semibold flex items-center justify-between shadow-[0_0_20px_rgba(255,255,255,0.06)] cursor-pointer group active:scale-[0.99] bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/30 transition-all"
                 >
-                  <div className="flex items-center gap-1.5 truncate mr-2">
+                  <div className="flex items-center gap-1.5 min-w-0 text-left mr-2">
                     <Sparkles size={13} className="text-[#F59E0B] group-hover:rotate-12 transition-transform shrink-0" />
-                    <span className="truncate">
+                    <span>
                       {isSidePanelOpen ? 'Close Detailed Breakdown' : 'Detailed Spectrum Breakdown'}
                     </span>
                   </div>
@@ -785,7 +785,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
             </div>
 
             {/* Scrollable Content inside Drawer for Mobile */}
-            <div className="overflow-y-auto px-4 py-3 no-scrollbar space-y-4 pb-[max(2.5rem,env(safe-area-inset-bottom,28px))]">
+            <div className="min-h-0 overflow-y-auto px-4 py-3 no-scrollbar space-y-4 pb-[max(2.5rem,env(safe-area-inset-bottom,28px))]">
               {renderAllSections(true)}
             </div>
           </GlassPanel>
