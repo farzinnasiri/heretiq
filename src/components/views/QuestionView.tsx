@@ -120,7 +120,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
       */}
       <main className="flex-1 flex flex-col justify-between sm:justify-center sm:gap-7 md:gap-8 items-center max-w-3xl mx-auto w-full min-h-0 py-3 sm:py-0 sm:-translate-y-4">
         {/* Eye-Level Question Prompt (upper-middle on mobile, tight to buttons on desktop) */}
-        <div className="flex-1 sm:flex-none flex items-center justify-center w-full px-2 sm:px-4 text-center my-auto sm:my-0 min-h-0 sm:min-h-0">
+        <div className="flex-1 sm:flex-none sm:h-[132px] md:h-[144px] lg:h-[152px] flex items-center justify-center sm:items-start w-full px-2 sm:px-4 text-center my-auto sm:my-0 min-h-0">
           <h2
             ref={promptHeadingRef}
             tabIndex={-1}
@@ -145,7 +145,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   aria-pressed={isSelected}
                   onClick={() => handleSelect(choiceKey)}
                   disabled={isTransitioning}
-                  className={`choice-card group relative p-4.5 xs:p-5 sm:p-5 md:p-6 min-h-[84px] xs:min-h-[96px] sm:min-h-[140px] md:min-h-[155px] text-left rounded-2xl flex flex-col justify-between select-none cursor-pointer transition-all active:scale-[0.98] ${
+                  className={`choice-card group relative p-4.5 xs:p-5 sm:p-5 md:p-6 min-h-[84px] xs:min-h-[96px] sm:min-h-0 sm:h-[150px] md:h-[165px] text-left rounded-2xl flex flex-col justify-between select-none cursor-pointer transition-all active:scale-[0.98] ${
                     isSelected ? 'selected' : ''
                   }`}
                 >
