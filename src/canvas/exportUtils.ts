@@ -92,17 +92,37 @@ export async function shareResult(
   }
 
   const file = new File([asset.blob], asset.filename, { type: 'image/png' });
+  const shareText = `${asset.text} ${resultUrl}`;
+
   try {
+    // Sharing image file with text+URL caption.
+    // NOTE: Passing 'url' as a separate property in navigator.share alongside 'files'
+    // causes Android intent handlers (Twitter/X, Telegram) to treat it as a link share
+    // and discard the file stream. Including the URL in 'text' preserves the image attachment.
     await navigator.share({
       title: asset.title,
-      text: asset.text,
-      url: resultUrl,
+      text: shareText,
       files: [file],
     });
     return 'shared';
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       return 'cancelled';
+    }
+    // Fallback: if file sharing throws an unsupported error on this device/browser, try standard link share
+    try {
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        await navigator.share({
+          title: asset.title,
+          text: asset.text,
+          url: resultUrl,
+        });
+        return 'shared';
+      }
+    } catch (fallbackError) {
+      if (fallbackError instanceof DOMException && fallbackError.name === 'AbortError') {
+        return 'cancelled';
+      }
     }
     return 'failed';
   }

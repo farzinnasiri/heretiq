@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Copy, Download, Image, Share2, Smartphone, X } from 'lucide-react';
+import { Check, Copy, Download, Image, MessageCircle, Send, Share2, X } from 'lucide-react';
 import { GlassButton, GlassPanel } from '../ui/Glass';
 
 interface ShareModalProps {
@@ -13,9 +13,7 @@ interface ShareModalProps {
   isBusy: boolean;
   message: string | null;
   onSharePortrait?: () => void;
-  onShareStory: () => void;
   onDownloadPortrait: () => void;
-  onDownloadStory?: () => void;
 }
 
 export const ShareModal: React.FC<ShareModalProps> = ({
@@ -29,7 +27,6 @@ export const ShareModal: React.FC<ShareModalProps> = ({
   isBusy,
   message,
   onSharePortrait,
-  onShareStory,
   onDownloadPortrait,
 }) => {
   const [copied, setCopied] = useState(false);
@@ -54,6 +51,24 @@ export const ShareModal: React.FC<ShareModalProps> = ({
     }
   };
 
+  const persona = personaName || archetypeTitle;
+  const shareText = `I got ${persona} on HERETIQ. Discover your political archetype:`;
+
+  const handleShareTwitter = () => {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleShareTelegram = () => {
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+    window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleShareWhatsApp = () => {
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`;
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center p-0 lg:p-4">
       <div
@@ -76,7 +91,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
               style={{ backgroundColor: accentColor, boxShadow: `0 0 10px ${accentColor}` }}
             />
             <h3 className="text-base font-display font-extrabold text-white tracking-tight">
-              Share my result
+              Share your result
             </h3>
           </div>
           <GlassButton
@@ -107,7 +122,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
             </div>
           </div>
 
-          {/* Primary Action in Fallback / Share flow: Download Image */}
+          {/* Primary Action: Download Image */}
           <GlassButton
             type="button"
             onClick={onDownloadPortrait}
@@ -118,53 +133,61 @@ export const ShareModal: React.FC<ShareModalProps> = ({
               <Download size={18} className="text-[#05060A]" />
             </span>
             <span>
-              <span className="block text-sm font-extrabold text-[#05060A]">Download image</span>
-              <span className="block text-xs text-black/60 mt-0.5">Canonical 4:5 portrait (1080×1350)</span>
+              <span className="block text-sm font-extrabold text-[#05060A]">Download card image</span>
+              <span className="block text-xs text-black/60 mt-0.5">High-resolution 4:5 portrait (1080×1350)</span>
             </span>
           </GlassButton>
 
-          {/* Secondary Actions Grid */}
-          <div className="grid grid-cols-2 gap-2.5">
+          {/* Social Media Share Actions */}
+          <div className="flex flex-col gap-2">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[#94A3B8] px-1">
+              Share to social media
+            </span>
+            <div className="grid grid-cols-3 gap-2">
+              {/* X / Twitter */}
+              <GlassButton
+                type="button"
+                onClick={handleShareTwitter}
+                className="p-3 rounded-2xl liquid-glass-button text-center flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-white/30 transition-all"
+              >
+                <span className="text-base font-black font-sans text-white">𝕏</span>
+                <span className="text-[11px] font-bold text-[#E2E8F0]">Post to X</span>
+              </GlassButton>
+
+              {/* Telegram */}
+              <GlassButton
+                type="button"
+                onClick={handleShareTelegram}
+                className="p-3 rounded-2xl liquid-glass-button text-center flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-white/30 transition-all"
+              >
+                <Send size={16} className="text-[#38BDF8]" />
+                <span className="text-[11px] font-bold text-[#E2E8F0]">Telegram</span>
+              </GlassButton>
+
+              {/* WhatsApp */}
+              <GlassButton
+                type="button"
+                onClick={handleShareWhatsApp}
+                className="p-3 rounded-2xl liquid-glass-button text-center flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-white/30 transition-all"
+              >
+                <MessageCircle size={16} className="text-[#4ADE80]" />
+                <span className="text-[11px] font-bold text-[#E2E8F0]">WhatsApp</span>
+              </GlassButton>
+            </div>
+          </div>
+
+          {/* System Share (if supported) */}
+          {onSharePortrait && (
             <GlassButton
               type="button"
-              onClick={onShareStory}
+              onClick={onSharePortrait}
               disabled={isBusy}
-              className="p-3.5 rounded-2xl liquid-glass-button text-left flex items-center gap-3 cursor-pointer disabled:opacity-50"
+              className="w-full p-3.5 rounded-2xl liquid-glass-button flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50 text-xs font-bold text-white"
             >
-              <Smartphone size={18} className="text-[#F3F4F6] shrink-0" />
-              <span>
-                <span className="block text-xs font-bold text-white">Share to Stories</span>
-                <span className="block text-[10px] text-[#94A3B8] mt-0.5">9:16 composition</span>
-              </span>
+              <Share2 size={16} className="text-[#94A3B8]" />
+              <span>Open system share sheet</span>
             </GlassButton>
-
-            {onSharePortrait ? (
-              <GlassButton
-                type="button"
-                onClick={onSharePortrait}
-                disabled={isBusy}
-                className="p-3.5 rounded-2xl liquid-glass-button text-left flex items-center gap-3 cursor-pointer disabled:opacity-50"
-              >
-                <Share2 size={18} className="text-[#F3F4F6] shrink-0" />
-                <span>
-                  <span className="block text-xs font-bold text-white">System share</span>
-                  <span className="block text-[10px] text-[#94A3B8] mt-0.5">Open share sheet</span>
-                </span>
-              </GlassButton>
-            ) : (
-              <GlassButton
-                type="button"
-                onClick={handleCopy}
-                className="p-3.5 rounded-2xl liquid-glass-button text-left flex items-center gap-3 cursor-pointer"
-              >
-                {copied ? <Check size={18} className="text-emerald-400 shrink-0" /> : <Copy size={18} className="text-[#F3F4F6] shrink-0" />}
-                <span>
-                  <span className="block text-xs font-bold text-white">{copied ? 'Link copied' : 'Copy link'}</span>
-                  <span className="block text-[10px] text-[#94A3B8] mt-0.5">Direct result URL</span>
-                </span>
-              </GlassButton>
-            )}
-          </div>
+          )}
 
           {/* Copy Result Link Bar */}
           <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
@@ -173,16 +196,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({
             <GlassButton
               type="button"
               onClick={handleCopy}
-              className="px-3 py-2.5 rounded-xl liquid-glass-button text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shrink-0"
+              className="px-3.5 py-2 rounded-xl liquid-glass-button text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shrink-0"
             >
               {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-              <span>{copied ? 'Copied' : 'Copy result link'}</span>
+              <span>{copied ? 'Copied' : 'Copy link'}</span>
             </GlassButton>
           </div>
-
-          <p className="text-[10.5px] font-mono text-[#64748B] text-center">
-            Story sharing prepares a 9:16 composition. Choose Instagram or another app from your share sheet.
-          </p>
 
           {message && (
             <div className="text-xs font-mono text-center py-2.5 px-3 bg-white/[0.06] rounded-xl text-white">

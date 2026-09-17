@@ -5,7 +5,6 @@ import {
   Choice,
   PresentedItem,
   Run,
-  SharedCardResult,
 } from '../domain/types';
 import { CORE_QUESTION_SEQUENCE } from '../domain/questions';
 import { computeLedgerState } from '../domain/scoring';
@@ -59,11 +58,11 @@ export interface CompassStore {
 }
 
 export function useCompassStore(): CompassStore {
-  // Check if hash contains shared card
-  const initialHash = typeof window !== 'undefined' ? window.location.hash : '';
-  const parsedCard = (initialHash.includes('card=') || initialHash.includes('result=') || initialHash.includes('s='))
-    ? parseSharedCard(initialHash)
-    : null;
+  // Check if hash or path contains shared card
+  const initialHash = typeof window !== 'undefined'
+    ? (window.location.hash || (window.location.pathname.length > 1 ? window.location.pathname : ''))
+    : '';
+  const parsedCard = initialHash ? parseSharedCard(initialHash) : null;
 
   // Read saved session
   let savedRun: Run | null = null;
@@ -183,17 +182,12 @@ export function useCompassStore(): CompassStore {
         answers[item.questionId] = item.choice;
       }
     }
-    const sharedObj: SharedCardResult = {
-      schema: 1,
-      modelVersion: '0.1',
-      renderVersion: '1',
-      scores,
-      coverage,
-      visualSeed: run.visualSeed,
+    return generateShareUrl({
+      archetypeSlug: archetypeResult.archetype.id,
       answers,
-    };
-    return generateShareUrl(sharedObj);
-  }, [scores, coverage, run.visualSeed, run.presented]);
+      visualSeed: run.visualSeed,
+    });
+  }, [archetypeResult.archetype.id, run.visualSeed, run.presented]);
 
   // Sync shareable URL hash into browser address bar when viewing own result
   useEffect(() => {
@@ -223,8 +217,8 @@ export function useCompassStore(): CompassStore {
   // Handle incoming hash changes
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash.includes('card=') || hash.includes('result=') || hash.includes('s=')) {
+      const hash = window.location.hash || window.location.pathname;
+      if (hash) {
         const res = parseSharedCard(hash);
         if (res.valid && res.card) {
           const reconstructed = reconstructPresentedFromAnswers(res.card.answers);
@@ -243,7 +237,11 @@ export function useCompassStore(): CompassStore {
     };
 
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
+    };
   }, []);
 
   // Action: start new quiz from intro

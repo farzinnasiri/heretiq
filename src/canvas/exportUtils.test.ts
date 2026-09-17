@@ -144,8 +144,7 @@ describe('exportUtils', () => {
       expect(shareMock).toHaveBeenCalledWith(
         expect.objectContaining({
           title: dummyAsset.title,
-          text: dummyAsset.text,
-          url: 'https://heretiq.app/#card=123',
+          text: `${dummyAsset.text} https://heretiq.app/#card=123`,
         })
       );
     });

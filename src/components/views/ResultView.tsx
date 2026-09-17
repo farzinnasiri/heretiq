@@ -30,7 +30,6 @@ import { preloadArchetypeAssets } from '../../utils/imagePreloader';
 import {
   Share2,
   Download,
-  Smartphone,
   Check,
   ChevronUp,
   ChevronDown,
@@ -294,7 +293,6 @@ export const ResultView: React.FC<ResultViewProps> = ({
     assetPromisesRef.current = {};
     if (forgePhase === 'settled') {
       void getShareAsset('portrait');
-      void getShareAsset('story');
     }
   }, [cardSerial, forgePhase, getShareAsset]);
 
@@ -360,33 +358,6 @@ export const ResultView: React.FC<ResultViewProps> = ({
     }
   };
 
-  const handleShareStory = async () => {
-    setIsExporting(true);
-    setExportMessage('Preparing story image… Choose Instagram from the share sheet.');
-
-    try {
-      const asset = await getShareAsset('story');
-      if (canShareFiles()) {
-        const result = await shareResult(asset, shareableUrl);
-        if (result === 'shared') {
-          showExportMessage('Story image shared.');
-        } else if (result === 'failed' || result === 'unsupported') {
-          downloadAsset(asset);
-          showExportMessage('Story image saved. Upload to your story.');
-        } else {
-          setExportMessage(null);
-        }
-      } else {
-        downloadAsset(asset);
-        showExportMessage('Story image saved. Upload to your story.');
-      }
-    } catch (error) {
-      console.error(error);
-      showExportMessage('Could not prepare the story image.');
-    } finally {
-      setIsExporting(false);
-    }
-  };
 
   const handleInviteFriend = async () => {
     const homeUrl = typeof window !== 'undefined' ? window.location.origin : 'https://heretiq.app';
@@ -638,20 +609,8 @@ export const ResultView: React.FC<ResultViewProps> = ({
                 </GlassButton>
               </div>
 
-              {/* Row 2: Secondary Utilities - Side-by-side on mobile to save vertical height, stacked on desktop */}
-              <div className={`grid grid-cols-2 sm:grid-cols-1 gap-2 sm:gap-2.5 ${!isForging ? 'animate-deck-module-2' : 'opacity-0'}`}>
-                {/* Mobile Only Stories Shortcut */}
-                <GlassButton
-                  type="button"
-                  onClick={handleShareStory}
-                  disabled={isExporting}
-                  className="w-full sm:hidden py-2.5 px-3 liquid-glass-button text-[11px] font-bold text-white rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.99] disabled:opacity-50"
-                >
-                  <Smartphone size={13} className="text-[#94A3B8] shrink-0" />
-                  <span className="truncate">Stories (9:16)</span>
-                </GlassButton>
-
-                {/* Invite a Friend */}
+              {/* Row 2: Secondary Action - Invite a Friend */}
+              <div className={`w-full ${!isForging ? 'animate-deck-module-2' : 'opacity-0'}`}>
                 <GlassButton
                   type="button"
                   onClick={handleInviteFriend}
@@ -665,8 +624,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   ) : (
                     <>
                       <Send size={12} className="text-[#0066FF] shrink-0" />
-                      <span className="truncate sm:hidden">Invite Friend</span>
-                      <span className="hidden sm:inline truncate">Invite a friend to take the quiz</span>
+                      <span className="truncate">Invite a friend to take the quiz</span>
                     </>
                   )}
                 </GlassButton>
@@ -790,7 +748,6 @@ export const ResultView: React.FC<ResultViewProps> = ({
         isBusy={isExporting}
         message={exportMessage}
         onSharePortrait={canShareFiles() ? handleShareResult : undefined}
-        onShareStory={handleShareStory}
         onDownloadPortrait={() => {
           void (async () => {
             setIsExporting(true);
@@ -800,20 +757,6 @@ export const ResultView: React.FC<ResultViewProps> = ({
               showExportMessage('Portrait image saved.');
             } catch {
               showExportMessage('Could not save portrait image.');
-            } finally {
-              setIsExporting(false);
-            }
-          })();
-        }}
-        onDownloadStory={() => {
-          void (async () => {
-            setIsExporting(true);
-            try {
-              const asset = await getShareAsset('story');
-              downloadAsset(asset);
-              showExportMessage('Story image saved.');
-            } catch {
-              showExportMessage('Could not save story image.');
             } finally {
               setIsExporting(false);
             }
