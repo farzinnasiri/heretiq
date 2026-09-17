@@ -193,6 +193,7 @@ describe('exportUtils', () => {
       expect(shareMock).toHaveBeenCalledWith(
         expect.objectContaining({
           url: 'https://heretiq.app',
+          text: 'Discover your political archetype on HERETIQ — 18 questions under 5 minutes. Take the quiz:',
         })
       );
     });

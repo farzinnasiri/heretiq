@@ -227,12 +227,12 @@ export const IntroView: React.FC<IntroViewProps> = ({
         <div className="relative z-30 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-2 shrink-0">
           {/* Keep the time cue in the heading flow so narrow screens cannot clip it. */}
           <GlassPanel
-            aria-label="Under 3 minutes"
+            aria-label="Under 5 minutes"
             className="order-last mt-2 inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0C1018]/95 border border-[#FF2A54]/30 select-none"
           >
             <span className="w-2 h-2 rounded-full bg-[#FF2A54] shadow-[0_0_8px_#FF2A54] animate-pulse" />
             <span className="text-[8px] font-mono tracking-[0.08em] text-[#94A3B8] uppercase leading-tight">UNDER</span>
-            <span className="font-display font-black text-[10px] text-white tracking-tight leading-tight">3 MIN</span>
+            <span className="font-display font-black text-[10px] text-white tracking-tight leading-tight">5 MIN</span>
           </GlassPanel>
 
           <div className="relative">

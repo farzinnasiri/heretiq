@@ -135,7 +135,7 @@ export async function shareQuizInvite(
     try {
       await navigator.share({
         title: 'HERETIQ · Political Archetype Quiz',
-        text: 'Discover your political archetype on HERETIQ with 18 real-world tensions. Take the quiz:',
+        text: 'Discover your political archetype on HERETIQ — 18 questions under 5 minutes. Take the quiz:',
         url: quizUrl,
       });
       return 'shared';
