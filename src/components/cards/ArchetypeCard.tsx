@@ -141,17 +141,15 @@ const AnimatedDimensionRow: React.FC<AnimatedDimensionRowProps> = ({
   if (displayedScore < 50) {
     const pct = 100 - displayedScore;
     badgeText = `${pct}% ${cfg.leftLabel}`;
-    badgeColor = 'text-[#FF2A54] bg-[#FF2A54]/10 border-[#FF2A54]/30';
+    badgeColor = 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/30';
   } else if (displayedScore > 50) {
     badgeText = `${displayedScore}% ${cfg.rightLabel}`;
-    badgeColor = 'text-[#0066FF] bg-[#0066FF]/10 border-[#0066FF]/30';
+    badgeColor = 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/30';
   }
 
   const dotColor =
-    displayedScore < 50
-      ? 'bg-[#FF2A54] shadow-[0_0_8px_#FF2A54]'
-      : displayedScore > 50
-      ? 'bg-[#0066FF] shadow-[0_0_8px_#0066FF]'
+    displayedScore !== 50
+      ? 'bg-[#F59E0B] shadow-[0_0_8px_#F59E0B]'
       : 'bg-white shadow-[0_0_8px_white]';
 
   return (
@@ -176,23 +174,38 @@ const AnimatedDimensionRow: React.FC<AnimatedDimensionRowProps> = ({
         </span>
       </div>
 
-      {/* Tier 2: Precision Gradient Track with Glowing Indicator Dot */}
-      <div className="relative h-1.5 xs:h-2 sm:h-2.5 w-full rounded-full bg-gradient-to-r from-[#FF2A54]/30 via-white/10 to-[#0066FF]/30 border border-white/15 my-0.5">
+      {/* Tier 2: Precision Telemetry Track with Diverging Fill & Indicator Dot */}
+      <div className="relative h-1.5 xs:h-2 sm:h-2.5 w-full rounded-full bg-white/[0.07] border border-white/15 my-0.5 overflow-hidden">
         {/* 50% Midline Pip */}
-        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/35 -translate-x-1/2 z-0" />
+        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/35 -translate-x-1/2 z-10 pointer-events-none" />
+
+        {/* Center-outward diverging fill bar */}
+        {displayedScore !== 50 && (
+          <div
+            className="absolute top-0 bottom-0 rounded-full z-0 pointer-events-none transition-all duration-150"
+            style={{
+              left: displayedScore < 50 ? `${displayedScore}%` : '50%',
+              width: `${Math.abs(displayedScore - 50)}%`,
+              background: displayedScore < 50
+                ? 'linear-gradient(270deg, rgba(245, 158, 11, 0.45) 0%, rgba(245, 158, 11, 0.12) 100%)'
+                : 'linear-gradient(90deg, rgba(245, 158, 11, 0.45) 0%, rgba(245, 158, 11, 0.12) 100%)',
+            }}
+          />
+        )}
+
         {/* Glowing Score Indicator Dot */}
         <div
-          className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 xs:w-3.5 xs:h-3.5 rounded-full z-10 transition-all duration-150 ${dotColor}`}
-          style={{ left: `calc(${displayedScore}% - 6px)` }}
+          className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 xs:w-3.5 xs:h-3.5 rounded-full z-20 transition-all duration-150 ${dotColor}`}
+          style={{ left: `${displayedScore}%` }}
         />
       </div>
 
       {/* Tier 3: Left & Right Pole Labels Aligned to Track Endpoints */}
       <div className="flex justify-between items-center text-[8px] xs:text-[8.5px] sm:text-[9.5px] font-mono leading-none">
-        <span className="text-[#FF2A54] font-semibold truncate text-left max-w-[48%]">
+        <span className={`${displayedScore < 50 ? 'text-white font-bold' : 'text-[#94A3B8]/80'} truncate text-left max-w-[48%]`}>
           {cfg.leftLabel}
         </span>
-        <span className="text-[#0066FF] font-semibold truncate text-right max-w-[48%]">
+        <span className={`${displayedScore > 50 ? 'text-white font-bold' : 'text-[#94A3B8]/80'} truncate text-right max-w-[48%]`}>
           {cfg.rightLabel}
         </span>
       </div>
@@ -875,8 +888,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
             {/* Duality Dots & Single Flip Indicator */}
             <div className="flex justify-between items-center pt-1 border-t border-white/[0.08] mt-0.5 text-[8.5px] sm:text-[9px] font-mono text-[#64748B]">
               <div className="flex items-center gap-1.5 truncate mr-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A54] shrink-0" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] shrink-0 shadow-[0_0_6px_#F59E0B]" />
                 <span className="uppercase tracking-wider truncate">
                   VERIFIED BY HERETIQ<span className="hidden xs:inline"> · {verifiedDate}</span>
                 </span>
@@ -968,8 +980,7 @@ export const ArchetypeCard: React.FC<ArchetypeCardProps> = ({
           <div className="relative z-10 shrink-0 w-full bg-black/60 backdrop-blur-md px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl border border-white/[0.09]">
             <div className="flex justify-between items-center w-full text-[8px] xs:text-[8.5px] sm:text-[9.5px] font-mono">
               <div className="flex items-center gap-1.5 text-emerald-400 font-bold tracking-wider uppercase truncate mr-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A54] shrink-0" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] shrink-0 shadow-[0_0_6px_#F59E0B]" />
                 <ShieldCheck size={11} className="text-emerald-400 shrink-0" />
                 <span className="truncate">HERETIQ VERIFIED</span>
               </div>

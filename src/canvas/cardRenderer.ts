@@ -270,18 +270,11 @@ function drawCollectibleCard(
   const dotRadius = Math.round(verifyFontSize * 0.28);
   const dotCenterY = verifyY - Math.round(verifyFontSize * 0.35);
   const dot1X = x + plaqueMarginX + plaquePadX + dotRadius;
-  const dot2X = dot1X + dotRadius * 2 + 8;
 
-  // Crimson dot
-  ctx.fillStyle = '#FF2A54';
+  // Golden verification pip
+  ctx.fillStyle = '#F59E0B';
   ctx.beginPath();
   ctx.arc(dot1X, dotCenterY, dotRadius, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Cobalt dot
-  ctx.fillStyle = '#0066FF';
-  ctx.beginPath();
-  ctx.arc(dot2X, dotCenterY, dotRadius, 0, Math.PI * 2);
   ctx.fill();
 
   // Monospace verification label
@@ -289,7 +282,7 @@ function drawCollectibleCard(
   ctx.fillStyle = '#64748B';
   ctx.textAlign = 'left';
   const verifiedStr = `VERIFIED BY HERETIQ · ${formatVerifiedDate().toUpperCase()}`;
-  ctx.fillText(verifiedStr, dot2X + dotRadius + 12, verifyY);
+  ctx.fillText(verifiedStr, dot1X + dotRadius + 10, verifyY);
 
   // Corner Pips (Drawn on top to ensure all 4 are crisply visible & glowing)
   const pipOffset = innerMargin + Math.round(width * 0.016);

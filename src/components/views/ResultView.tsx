@@ -875,7 +875,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
           <section className="flex flex-col justify-start min-w-0">
             <div>
               <div className="flex items-center gap-1.5 mb-1.5 lg:mb-1 xl:mb-2">
-                <Activity size={14} className="text-[#0066FF] xl:w-4 xl:h-4" />
+                <Activity size={14} className="text-[#F59E0B] xl:w-4 xl:h-4" />
                 <span className="text-[11px] xl:text-xs font-mono tracking-widest text-[#64748B] uppercase font-bold">
                   POLITICAL SPECTRUMS
                 </span>
@@ -900,19 +900,17 @@ export const ResultView: React.FC<ResultViewProps> = ({
                     } else if (s < 50) {
                       const pct = 100 - s;
                       badgeText = `${pct}% ${meta.score0End.split(' ')[0]}`;
-                      badgeColor = 'text-[#FF2A54] bg-[#FF2A54]/10 border-[#FF2A54]/25';
+                      badgeColor = 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/30';
                     } else {
                       badgeText = `${s}% ${meta.score100End.split(' ')[0]}`;
-                      badgeColor = 'text-[#0066FF] bg-[#0066FF]/10 border-[#0066FF]/25';
+                      badgeColor = 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/30';
                     }
                   }
 
                   const dotColorClass =
                     s !== null
-                      ? s < 50
-                        ? 'bg-[#FF2A54] shadow-[0_0_8px_#FF2A54]'
-                        : s > 50
-                        ? 'bg-[#0066FF] shadow-[0_0_8px_#0066FF]'
+                      ? s !== 50
+                        ? 'bg-[#F59E0B] shadow-[0_0_10px_#F59E0B]'
                         : 'bg-white shadow-[0_0_8px_white]'
                       : 'bg-white';
 
@@ -939,21 +937,38 @@ export const ResultView: React.FC<ResultViewProps> = ({
 
                       {/* Spectrum Endpoints: Full text, ZERO truncation */}
                       <div className="flex items-center justify-between text-[11px] lg:text-xs xl:text-sm font-semibold gap-1.5 leading-tight">
-                        <span className={s !== null && s < 50 ? 'text-[#FF2A54] font-bold' : 'text-[#FF2A54]/80'}>
+                        <span className={s !== null && s < 50 ? 'text-white font-bold tracking-tight' : 'text-[#94A3B8]/80'}>
                           {meta.score0End}
                         </span>
-                        <span className={`text-right ${s !== null && s > 50 ? 'text-[#0066FF] font-bold' : 'text-[#0066FF]/80'}`}>
+                        <span className={`text-right ${s !== null && s > 50 ? 'text-white font-bold tracking-tight' : 'text-[#94A3B8]/80'}`}>
                           {meta.score100End}
                         </span>
                       </div>
 
-                      {/* Full-width Precision Spectrum Track */}
-                      <div className="relative h-1.5 lg:h-2 xl:h-2.5 w-full rounded-full spectrum-track border border-white/10 mt-0.5">
-                        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/35 -translate-x-1/2 z-0" />
+                      {/* Full-width Precision Spectrum Track with Center-Outward Diverging Indicator */}
+                      <div className="relative h-1.5 lg:h-2 xl:h-2.5 w-full rounded-full spectrum-track border border-white/10 mt-0.5 overflow-hidden">
+                        {/* 50% Midline Pip */}
+                        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/35 -translate-x-1/2 z-10 pointer-events-none" />
+
+                        {/* Center-outward diverging fill bar */}
+                        {s !== null && s !== 50 && (
+                          <div
+                            className="absolute top-0 bottom-0 rounded-full transition-all duration-300 z-0 pointer-events-none"
+                            style={{
+                              left: s < 50 ? `${s}%` : '50%',
+                              width: `${Math.abs(s - 50)}%`,
+                              background: s < 50
+                                ? 'linear-gradient(270deg, rgba(245, 158, 11, 0.45) 0%, rgba(245, 158, 11, 0.12) 100%)'
+                                : 'linear-gradient(90deg, rgba(245, 158, 11, 0.45) 0%, rgba(245, 158, 11, 0.12) 100%)',
+                            }}
+                          />
+                        )}
+
+                        {/* Score Indicator Dot */}
                         {s !== null && (
                           <div
-                            className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 rounded-full z-10 transition-all duration-300 ${dotColorClass}`}
-                            style={{ left: `calc(${s}% - 6px)` }}
+                            className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 rounded-full z-20 transition-all duration-300 ${dotColorClass}`}
+                            style={{ left: `${s}%` }}
                           />
                         )}
                       </div>

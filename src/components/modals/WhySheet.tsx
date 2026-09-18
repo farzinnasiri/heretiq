@@ -86,8 +86,8 @@ export const WhySheet: React.FC<WhySheetProps> = ({
                 <h3 className="font-display font-bold text-sm text-white">
                   {dimension} · {meta.name}
                 </h3>
-                <span className="text-[10px] font-mono text-[#64748B]">
-                  <span className="text-[#FF2A54]">{meta.score0End}</span> ↔ <span className="text-[#0066FF]">{meta.score100End}</span>
+                <span className="text-[10px] font-mono text-[#94A3B8]">
+                  <span>{meta.score0End}</span> ↔ <span>{meta.score100End}</span>
                 </span>
               </div>
 
